@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Personal macro & tech intelligence dashboard">
+  <title>{{ title }} | {{ generated_at }}</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0a0a0a;
+      --panel: #111111;
+      --panel-hover: #161616;
+      --border: #222222;
+      --text: #e0e0e0;
+      --text-dim: #888888;
+      --muted: #666666;
+      --up: #22c55e;
+      --down: #ef4444;
+      --accent: #3b82f6;
+      --accent-dim: #1d4ed8;
+      --yellow: #eab308;
+    }
+
+    html {
+      font-size: 11px;
+    }
+
+    body {
+      font-family: 'IBM Plex Mono', ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.4;
+      padding: 8px;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 4px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 12px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h1 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: -0.5px;
+    }
+
+    .badge {
+      font-size: 9px;
+      padding: 2px 6px;
+      background: var(--accent-dim);
+      color: var(--text);
+      border-radius: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .timestamp {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    /* Grid Layout */
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 8px;
+    }
+
+    /* Panel Styles */
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 10px;
+    }
+
+    .panel:hover {
+      background: var(--panel-hover);
+    }
+
+    .panel-title {
+      font-size: 10px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+    }
+
+    /* Metric Styles */
+    .metric {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 8px;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+    }
+
+    .metric:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .metric-info {
+      min-width: 0;
+    }
+
+    .metric-name {
+      color: var(--text-dim);
+      font-size: 10px;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sparkline {
+      font-size: 10px;
+      color: var(--accent);
+      letter-spacing: -2px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .metric-value {
+      font-weight: 500;
+      font-size: 12px;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .metric-change {
+      font-size: 10px;
+      text-align: right;
+      min-width: 55px;
+      white-space: nowrap;
+    }
+
+    .metric-change.up {
+      color: var(--up);
+    }
+
+    .metric-change.down {
+      color: var(--down);
+    }
+
+    /* Stories Panel */
+    .stories-panel {
+      grid-column: 1 / -1;
+    }
+
+    @media (min-width: 900px) {
+      .stories-panel {
+        grid-column: span 2;
+      }
+    }
+
+    .story {
+      display: grid;
+      grid-template-columns: 50px 1fr;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .story:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .story-score {
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-end;
+      gap: 2px;
+      color: var(--yellow);
+      font-weight: 500;
+      font-size: 11px;
+    }
+
+    .story-score::before {
+      content: '\25B2';
+      font-size: 8px;
+      margin-top: 1px;
+    }
+
+    .story-content {
+      min-width: 0;
+    }
+
+    .story-title {
+      margin-bottom: 3px;
+      line-height: 1.35;
+    }
+
+    .story-title a {
+      color: var(--text);
+      text-decoration: none;
+      word-wrap: break-word;
+    }
+
+    .story-title a:hover {
+      color: var(--accent);
+    }
+
+    .story-meta {
+      color: var(--muted);
+      font-size: 9px;
+    }
+
+    .story-meta span {
+      margin-right: 8px;
+    }
+
+    /* Sidebar Feeds */
+    .sidebar-feeds {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 8px;
+      grid-column: 1 / -1;
+    }
+
+    .sidebar-story {
+      display: flex;
+      gap: 8px;
+      padding: 5px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 10px;
+    }
+
+    .sidebar-story:last-child {
+      border-bottom: none;
+    }
+
+    .sidebar-score {
+      color: var(--yellow);
+      font-weight: 500;
+      min-width: 35px;
+      text-align: right;
+    }
+
+    .sidebar-title a {
+      color: var(--text-dim);
+      text-decoration: none;
+    }
+
+    .sidebar-title a:hover {
+      color: var(--accent);
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 12px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--muted);
+      font-size: 9px;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      html {
+        font-size: 10px;
+      }
+
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+
+      .stories-panel,
+      .sidebar-feeds {
+        grid-column: 1;
+      }
+
+      .story {
+        grid-template-columns: 40px 1fr;
+      }
+
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+    }
+
+    /* Empty State */
+    .empty-state {
+      color: var(--muted);
+      font-style: italic;
+      padding: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <h1>{{ title }}</h1>
+    <span class="badge">Live</span>
+  </div>
+  <span class="timestamp">Updated: {{ generated_at }}</span>
+</header>
+
+<div class="dashboard">
+  {# Macro Metrics Panels #}
+  {% for group in metric_groups %}
+  <section class="panel">
+    <div class="panel-title">{{ group.name }}</div>
+    {% if group.metrics %}
+      {% for m in group.metrics %}
+      <div class="metric">
+        <div class="metric-info">
+          <div class="metric-name">{{ m.name }}</div>
+          {% if m.sparkline %}
+          <div class="sparkline">{{ m.sparkline }}</div>
+          {% endif %}
+        </div>
+        <div class="metric-value">{{ m.formatted_value }}</div>
+        <div class="metric-change {{ m.change_class }}">{{ m.formatted_change }}</div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state">No data available</div>
+    {% endif %}
+  </section>
+  {% endfor %}
+
+  {# Primary Stories Panel #}
+  <section class="panel stories-panel">
+    <div class="panel-title">Tech Discussion</div>
+    {% set primary_stories = [] %}
+    {% for feed in feeds %}
+      {% if feed.id == primary_feed %}
+        {% set primary_stories = feed.stories %}
+      {% endif %}
+    {% endfor %}
+
+    {% if primary_stories %}
+      {% for story in primary_stories[:15] %}
+      <div class="story">
+        <div class="story-score">{{ story.score }}</div>
+        <div class="story-content">
+          <div class="story-title">
+            <a href="{{ story.url or 'https://news.ycombinator.com/item?id=' ~ story.id }}" target="_blank" rel="noopener">
+              {{ story.title }}
+            </a>
+          </div>
+          <div class="story-meta">
+            <span>{{ story.comments }} comments</span>
+            <span>by {{ story.author }}</span>
+            <a href="https://news.ycombinator.com/item?id={{ story.id }}" target="_blank" rel="noopener">discuss</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state">No stories available</div>
+    {% endif %}
+  </section>
+
+  {# Sidebar Topic Feeds #}
+  {% if sidebar_feeds %}
+  <div class="sidebar-feeds">
+    {% for feed in feeds %}
+      {% if feed.id in sidebar_feeds %}
+      <section class="panel">
+        <div class="panel-title">{{ feed.name }}</div>
+        {% if feed.stories %}
+          {% for story in feed.stories[:8] %}
+          <div class="sidebar-story">
+            <div class="sidebar-score">{{ story.score }}</div>
+            <div class="sidebar-title">
+              <a href="{{ story.url or 'https://news.ycombinator.com/item?id=' ~ story.id }}" target="_blank" rel="noopener">
+                {{ story.title|truncate(80) }}
+              </a>
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="empty-state">No stories</div>
+        {% endif %}
+      </section>
+      {% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+
+<footer>
+  <p>Data sources: FRED, ECB, World Bank, Hacker News |
+     <a href="https://github.com/your-repo/bloomberg-lite">GitHub</a></p>
+</footer>
+
+</body>
+</html>
