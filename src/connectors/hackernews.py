@@ -172,9 +172,15 @@ class HNAlgoliaConnector(BaseFeedConnector):
             response.raise_for_status()
             data = response.json()
 
+            # Debug: log API response info
+            hits = data.get("hits", [])
+            print(f"    [DEBUG] Algolia URL: {url}")
+            print(f"    [DEBUG] Params: {params}")
+            print(f"    [DEBUG] Response hits: {len(hits)}, nbHits: {data.get('nbHits', 0)}")
+
             return FetchResult(
                 success=True,
-                data=data.get("hits", []),
+                data=hits,
                 source=self.SOURCE_NAME
             )
 
