@@ -1,0 +1,142 @@
+# Metric Configuration Schema
+# Each metric defines: identifier, display name, data source, and optional transforms
+
+defaults:
+  cache_hours: 6
+  history_points: 120  # ~10 years monthly data
+
+metrics:
+  # ============================================
+  # UNITED STATES (via FRED)
+  # ============================================
+  - id: us.fed_funds
+    name: "Fed Funds Rate"
+    source: fred
+    series_id: FEDFUNDS
+    frequency: monthly
+    unit: "%"
+    decimals: 2
+
+  - id: us.cpi_yoy
+    name: "US CPI YoY"
+    source: fred
+    series_id: CPIAUCSL
+    frequency: monthly
+    unit: "%"
+    decimals: 1
+    transform: yoy_percent
+
+  - id: us.core_cpi_yoy
+    name: "US Core CPI YoY"
+    source: fred
+    series_id: CPILFESL
+    frequency: monthly
+    unit: "%"
+    decimals: 1
+    transform: yoy_percent
+
+  - id: us.unemployment
+    name: "US Unemployment"
+    source: fred
+    series_id: UNRATE
+    frequency: monthly
+    unit: "%"
+    decimals: 1
+
+  - id: us.gdp_qoq
+    name: "US GDP QoQ"
+    source: fred
+    series_id: GDP
+    frequency: quarterly
+    unit: "%"
+    decimals: 1
+    transform: qoq_percent
+
+  - id: us.yield_curve
+    name: "10Y-2Y Spread"
+    source: fred
+    series_id: T10Y2Y
+    frequency: daily
+    unit: "bp"
+    decimals: 0
+    multiplier: 100  # Convert to basis points
+
+  # ============================================
+  # EUROZONE (via ECB SDMX)
+  # ============================================
+  - id: eu.deposit_rate
+    name: "ECB Deposit Rate"
+    source: ecb
+    dataflow: FM
+    series_key: M.U2.EUR.4F.KR.DFR.LEV
+    frequency: monthly
+    unit: "%"
+    decimals: 2
+
+  - id: eu.hicp_yoy
+    name: "Eurozone HICP YoY"
+    source: ecb
+    dataflow: ICP
+    series_key: M.U2.N.000000.4.ANR
+    frequency: monthly
+    unit: "%"
+    decimals: 1
+
+  - id: eu.unemployment
+    name: "Eurozone Unemployment"
+    source: ecb
+    dataflow: STS
+    series_key: M.I9.S.UNEH.RTT000.4.000
+    frequency: monthly
+    unit: "%"
+    decimals: 1
+
+  # ============================================
+  # GLOBAL (via FRED mirrors)
+  # ============================================
+  - id: global.brent
+    name: "Brent Crude"
+    source: fred
+    series_id: DCOILBRENTEU
+    frequency: daily
+    unit: "$/bbl"
+    decimals: 2
+
+  - id: global.gold
+    name: "Gold (London PM)"
+    source: fred
+    series_id: GOLDPMGBD228NLBM
+    frequency: daily
+    unit: "$/oz"
+    decimals: 0
+
+  - id: global.dxy
+    name: "USD Index (DXY)"
+    source: fred
+    series_id: DTWEXBGS
+    frequency: daily
+    unit: "index"
+    decimals: 1
+
+  # ============================================
+  # WORLD (via World Bank)
+  # ============================================
+  - id: world.gdp_growth
+    name: "World GDP Growth"
+    source: worldbank
+    indicator: NY.GDP.MKTP.KD.ZG
+    country: WLD
+    frequency: annual
+    unit: "%"
+    decimals: 1
+
+# Display groupings for dashboard layout
+groups:
+  - name: "US Economy"
+    metrics: [us.fed_funds, us.cpi_yoy, us.core_cpi_yoy, us.unemployment, us.gdp_qoq, us.yield_curve]
+
+  - name: "Eurozone"
+    metrics: [eu.deposit_rate, eu.hicp_yoy, eu.unemployment]
+
+  - name: "Global Markets"
+    metrics: [global.brent, global.gold, global.dxy]

@@ -1,0 +1,44 @@
+# Tech Feed Configuration
+
+feeds:
+  - id: hn_top
+    name: "Top Stories"
+    source: hn_firebase
+    endpoint: topstories
+    limit: 20
+    refresh_minutes: 30
+
+  - id: hn_best
+    name: "Best Stories"
+    source: hn_firebase
+    endpoint: beststories
+    limit: 10
+    refresh_minutes: 60
+
+  - id: hn_ai
+    name: "AI/ML"
+    source: hn_algolia
+    query: "LLM OR GPT OR Claude OR transformer OR \"machine learning\" OR \"neural network\""
+    tags: story
+    time_range: week
+    limit: 15
+
+  - id: hn_data
+    name: "Databases & Data"
+    source: hn_algolia
+    query: "postgres OR sqlite OR duckdb OR \"data engineering\" OR ETL"
+    tags: story
+    time_range: week
+    limit: 10
+
+  - id: hn_fintech
+    name: "Finance & Trading"
+    source: hn_algolia
+    query: "trading OR Bloomberg OR \"quantitative finance\" OR fintech"
+    tags: story
+    time_range: month
+    limit: 10
+
+display:
+  primary_feed: hn_top
+  sidebar_feeds: [hn_ai, hn_data]
