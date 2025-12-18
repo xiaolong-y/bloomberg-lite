@@ -194,14 +194,7 @@ def fetch_feeds(feeds_config: dict) -> None:
         logger.info(f"Fetching feed {config.id}...")
 
         try:
-            # Debug: log config details for Algolia feeds
-            if source == "hn_algolia":
-                logger.info(f"  Config: query={config.query}, tags={config.tags}, time_range={config.time_range}")
-
             stories = connector.fetch_and_normalize(config)
-
-            # Debug: log fetch result
-            logger.info(f"  Fetch returned {len(stories)} stories")
 
             # Store stories
             for story in stories:

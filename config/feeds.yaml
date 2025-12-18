@@ -18,7 +18,7 @@ feeds:
   - id: hn_ai
     name: "AI/ML"
     source: hn_algolia
-    query: "LLM OR GPT OR Claude OR transformer OR \"machine learning\" OR \"neural network\""
+    query: "LLM"
     tags: story
     time_range: week
     limit: 15
@@ -26,7 +26,7 @@ feeds:
   - id: hn_data
     name: "Databases & Data"
     source: hn_algolia
-    query: "postgres OR sqlite OR duckdb OR \"data engineering\" OR ETL"
+    query: "database"
     tags: story
     time_range: week
     limit: 10
@@ -34,7 +34,7 @@ feeds:
   - id: hn_fintech
     name: "Finance & Trading"
     source: hn_algolia
-    query: "trading OR Bloomberg OR \"quantitative finance\" OR fintech"
+    query: "fintech"
     tags: story
     time_range: month
     limit: 10
