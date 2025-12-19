@@ -149,6 +149,15 @@ def cleanup_old_stories(days: int = 7) -> int:
         return cursor.rowcount
 
 
+def clear_feed_stories(feed_id: str) -> int:
+    """Clear all stories for a feed before refresh. Returns count deleted."""
+    with get_connection() as conn:
+        cursor = conn.execute(
+            "DELETE FROM stories WHERE feed_id = ?", (feed_id,)
+        )
+        return cursor.rowcount
+
+
 def update_metric_meta(meta: MetricMeta) -> None:
     """Update metric metadata cache."""
     with get_connection() as conn:

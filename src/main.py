@@ -34,6 +34,7 @@ from .storage.database import (
     upsert_story,
     update_metric_meta,
     cleanup_old_stories,
+    clear_feed_stories,
 )
 from .storage.models import MetricMeta
 from .transforms.calculations import (
@@ -221,6 +222,9 @@ def fetch_feeds(feeds_config: dict) -> None:
 
         try:
             stories = connector.fetch_and_normalize(config)
+
+            # Clear old stories for this feed before inserting fresh ones
+            clear_feed_stories(config.id)
 
             # Store stories
             for story in stories:
