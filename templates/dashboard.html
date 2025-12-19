@@ -226,6 +226,12 @@
       color: var(--accent);
     }
 
+    .domain {
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 400;
+    }
+
     .story-meta {
       color: var(--muted);
       font-size: 9px;
@@ -362,27 +368,27 @@
   {# Primary Stories Panel #}
   <section class="panel stories-panel">
     <div class="panel-title">Tech Discussion</div>
-    {% set primary_stories = [] %}
+    {% set ns = namespace(primary_stories=[]) %}
     {% for feed in feeds %}
       {% if feed.id == primary_feed %}
-        {% set primary_stories = feed.stories %}
+        {% set ns.primary_stories = feed.stories %}
       {% endif %}
     {% endfor %}
 
-    {% if primary_stories %}
-      {% for story in primary_stories[:15] %}
+    {% if ns.primary_stories %}
+      {% for story in ns.primary_stories[:15] %}
       <div class="story">
         <div class="story-score">{{ story.score }}</div>
         <div class="story-content">
           <div class="story-title">
             <a href="{{ story.url or 'https://news.ycombinator.com/item?id=' ~ story.id }}" target="_blank" rel="noopener">
-              {{ story.title }}
+              {{ story.title }}{% if story.domain %} <span class="domain">({{ story.domain }})</span>{% endif %}
             </a>
           </div>
           <div class="story-meta">
-            <span>{{ story.comments }} comments</span>
-            <span>by {{ story.author }}</span>
-            <a href="https://news.ycombinator.com/item?id={{ story.id }}" target="_blank" rel="noopener">discuss</a>
+            {% if story.time_ago %}<span>{{ story.time_ago }}</span>{% endif %}
+            <span>{{ story.comments }} cmt</span>
+            <a href="https://news.ycombinator.com/item?id={{ story.id }}" target="_blank" rel="noopener">hn</a>
           </div>
         </div>
       </div>
@@ -405,7 +411,7 @@
             <div class="sidebar-score">{{ story.score }}</div>
             <div class="sidebar-title">
               <a href="{{ story.url or 'https://news.ycombinator.com/item?id=' ~ story.id }}" target="_blank" rel="noopener">
-                {{ story.title|truncate(80) }}
+                {{ story.title|truncate(70) }}{% if story.domain %} <span class="domain">({{ story.domain|truncate(15, True, '') }})</span>{% endif %}
               </a>
             </div>
           </div>

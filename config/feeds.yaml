@@ -1,59 +1,66 @@
 # Tech Feed Configuration
 # Fetching logic:
 # - Firebase feeds: Real-time top/best stories from HN (sorted by current ranking)
-# - Algolia feeds: Search with min_score filter, sorted by popularity (not date)
+# - Algolia feeds: Search with min_score filter, sorted by popularity
 
 feeds:
   # ============================================
-  # MAIN FEEDS (Firebase - real-time rankings)
+  # PRIMARY FEEDS (Firebase - real-time rankings)
   # ============================================
   - id: hn_top
     name: "Top Stories"
     source: hn_firebase
     endpoint: topstories
-    limit: 20
-    refresh_minutes: 30
-
-  - id: hn_best
-    name: "Best Stories"
-    source: hn_firebase
-    endpoint: beststories
-    limit: 10
-    refresh_minutes: 60
+    limit: 25
 
   # ============================================
-  # TOPIC FEEDS (Algolia - search by popularity)
+  # TOPIC FEEDS (Algolia - curated by interest)
   # ============================================
+
+  # Core tech interest
   - id: hn_ai
     name: "AI/ML"
     source: hn_algolia
     query: "AI"
     tags: story
     time_range: week
-    min_score: 50        # Only stories with 50+ points
-    sort_by: popularity  # Sort by score, not date
-    limit: 15
+    min_score: 50
+    sort_by: popularity
+    limit: 12
 
-  - id: hn_data
-    name: "Databases & Data"
+  # Infrastructure & Data
+  - id: hn_infra
+    name: "Infrastructure"
     source: hn_algolia
-    query: "database"
+    query: "postgres database rust"
     tags: story
     time_range: week
     min_score: 30
     sort_by: popularity
     limit: 10
 
-  - id: hn_fintech
-    name: "Finance & Trading"
+  # Markets & Finance (macro focus)
+  - id: hn_finance
+    name: "Markets & Finance"
     source: hn_algolia
-    query: "finance"
+    query: "markets trading fed"
+    tags: story
+    time_range: month
+    min_score: 30
+    sort_by: popularity
+    limit: 10
+
+  # East Asia focus
+  - id: hn_china
+    name: "China Tech"
+    source: hn_algolia
+    query: "china chinese"
     tags: story
     time_range: month
     min_score: 20
     sort_by: popularity
-    limit: 10
+    limit: 8
 
 display:
   primary_feed: hn_top
-  sidebar_feeds: [hn_ai, hn_data]
+  sidebar_feeds: [hn_ai, hn_infra, hn_finance, hn_china]

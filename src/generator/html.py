@@ -7,12 +7,63 @@ Output is a self-contained HTML file suitable for GitHub Pages.
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Optional
+from urllib.parse import urlparse
 
 import yaml
 from jinja2 import Environment, FileSystemLoader
 
 from ..storage.database import get_all_metric_meta, get_stories_by_feed, get_latest_observations
 from ..transforms.calculations import prepare_sparkline_data, generate_ascii_sparkline
+
+
+def extract_domain(url: Optional[str]) -> str:
+    """Extract domain from URL for display."""
+    if not url:
+        return ""
+    try:
+        parsed = urlparse(url)
+        domain = parsed.netloc.replace("www.", "")
+        return domain
+    except Exception:
+        return ""
+
+
+def time_ago(posted_at: Optional[str]) -> str:
+    """Convert timestamp to human-readable time ago."""
+    if not posted_at:
+        return ""
+    try:
+        if isinstance(posted_at, str):
+            # Handle ISO format
+            posted_at = posted_at.replace("Z", "+00:00")
+            dt = datetime.fromisoformat(posted_at)
+        else:
+            dt = posted_at
+
+        # Make comparison timezone-naive
+        if dt.tzinfo:
+            dt = dt.replace(tzinfo=None)
+
+        now = datetime.utcnow()
+        diff = now - dt
+
+        seconds = diff.total_seconds()
+        if seconds < 60:
+            return "now"
+        elif seconds < 3600:
+            mins = int(seconds / 60)
+            return f"{mins}m"
+        elif seconds < 86400:
+            hours = int(seconds / 3600)
+            return f"{hours}h"
+        elif seconds < 604800:
+            days = int(seconds / 86400)
+            return f"{days}d"
+        else:
+            weeks = int(seconds / 604800)
+            return f"{weeks}w"
+    except Exception:
+        return ""
 
 TEMPLATE_DIR = Path(__file__).parent.parent.parent / "templates"
 OUTPUT_DIR = Path(__file__).parent.parent.parent / "docs"
@@ -148,10 +199,14 @@ def build_dashboard_context() -> dict[str, Any]:
             "metrics": group_metrics
         })
 
-    # Get stories organized by feed
+    # Get stories organized by feed, with domain and time_ago
     feeds = []
     for feed_config in config["feeds"].get("feeds", []):
         stories = get_stories_by_feed(feed_config["id"], limit=feed_config.get("limit", 20))
+        # Enrich stories with domain and time_ago
+        for story in stories:
+            story["domain"] = extract_domain(story.get("url"))
+            story["time_ago"] = time_ago(story.get("posted_at"))
         feeds.append({
             "id": feed_config["id"],
             "name": feed_config["name"],
