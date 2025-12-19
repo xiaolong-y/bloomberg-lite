@@ -9,6 +9,8 @@ from .base import (
 from .fred import FREDConnector
 from .ecb import ECBConnector
 from .worldbank import WorldBankConnector
+from .imf import IMFConnector
+from .estat_dashboard import EStatDashboardConnector
 from .hackernews import HNFirebaseConnector, HNAlgoliaConnector
 
 __all__ = [
@@ -20,6 +22,8 @@ __all__ = [
     "FREDConnector",
     "ECBConnector",
     "WorldBankConnector",
+    "IMFConnector",
+    "EStatDashboardConnector",
     "HNFirebaseConnector",
     "HNAlgoliaConnector",
 ]

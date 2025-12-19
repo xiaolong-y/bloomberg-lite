@@ -23,6 +23,8 @@ from .connectors import (
     FREDConnector,
     ECBConnector,
     WorldBankConnector,
+    IMFConnector,
+    EStatDashboardConnector,
     HNFirebaseConnector,
     HNAlgoliaConnector,
     ConnectorConfig,
@@ -91,6 +93,10 @@ def fetch_metrics(metrics_config: dict) -> None:
                     connectors[source] = ECBConnector()
                 elif source == "worldbank":
                     connectors[source] = WorldBankConnector()
+                elif source == "imf":
+                    connectors[source] = IMFConnector()
+                elif source == "estat_dashboard":
+                    connectors[source] = EStatDashboardConnector()
                 else:
                     return None
             except ValueError as e:
@@ -120,6 +126,7 @@ def fetch_metrics(metrics_config: dict) -> None:
             series_key=metric.get("series_key"),
             indicator=metric.get("indicator"),
             country=metric.get("country"),
+            indicator_code=metric.get("indicator_code"),
         )
 
         logger.info(f"Fetching {config.metric_id}...")

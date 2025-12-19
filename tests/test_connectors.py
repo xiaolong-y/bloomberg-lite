@@ -10,6 +10,7 @@ from datetime import datetime
 from src.connectors.fred import FREDConnector
 from src.connectors.ecb import ECBConnector
 from src.connectors.worldbank import WorldBankConnector
+from src.connectors.imf import IMFConnector
 from src.connectors.hackernews import HNFirebaseConnector, HNAlgoliaConnector
 from src.connectors.base import ConnectorConfig, FeedConfig
 
@@ -564,3 +565,136 @@ class TestConnectorHealthChecks:
             mock_get.return_value = MagicMock(status_code=200)
 
             assert connector.health_check() is True
+
+    def test_imf_health_check_success(self):
+        """Test IMF health check with successful response."""
+        connector = IMFConnector()
+
+        with patch("requests.get") as mock_get:
+            mock_get.return_value = MagicMock(status_code=200)
+
+            assert connector.health_check() is True
+
+
+class TestIMFConnector:
+    """Tests for IMF DataMapper API connector."""
+
+    @pytest.fixture
+    def connector(self):
+        return IMFConnector()
+
+    @pytest.fixture
+    def config(self):
+        return ConnectorConfig(
+            metric_id="china_gdp",
+            name="China GDP Growth",
+            source="imf",
+            frequency="annual",
+            indicator="NGDP_RPCH",
+            country="CHN",
+            unit="%",
+            decimals=1,
+            multiplier=1.0
+        )
+
+    def test_imf_connector_fetch_success(self, connector, config):
+        """Test successful IMF API fetch."""
+        mock_response = {
+            "values": {
+                "NGDP_RPCH": {
+                    "CHN": {
+                        "2023": 5.4,
+                        "2022": 3.1,
+                        "2021": 8.6
+                    }
+                }
+            }
+        }
+
+        with patch("requests.get") as mock_get:
+            mock_get.return_value = MagicMock(
+                status_code=200,
+                json=lambda: mock_response
+            )
+            mock_get.return_value.raise_for_status = MagicMock()
+
+            result = connector.fetch(config)
+
+            assert result.success is True
+            assert result.source == "imf"
+            assert result.error is None
+            assert "NGDP_RPCH" in result.data
+
+    def test_imf_connector_fetch_missing_indicator(self, connector):
+        """Test fetch fails without indicator."""
+        config = ConnectorConfig(
+            metric_id="test",
+            name="Test",
+            source="imf",
+            frequency="annual"
+        )
+
+        result = connector.fetch(config)
+
+        assert result.success is False
+        assert "indicator required" in result.error
+
+    def test_imf_connector_fetch_api_error(self, connector, config):
+        """Test handling of API errors."""
+        import requests as req
+        with patch("requests.get") as mock_get:
+            mock_get.side_effect = req.RequestException("Connection timeout")
+
+            result = connector.fetch(config)
+
+            assert result.success is False
+            assert "Connection timeout" in result.error
+
+    def test_imf_connector_normalize(self, connector, config):
+        """Test normalization of IMF data."""
+        raw_data = {
+            "NGDP_RPCH": {
+                "CHN": {
+                    "2023": 5.4,
+                    "2022": 3.1,
+                    "2021": 8.6
+                }
+            }
+        }
+
+        observations = connector.normalize(config, raw_data)
+
+        assert len(observations) == 3
+        assert observations[0].metric_id == "china_gdp"
+        assert observations[0].value == 5.4
+        assert observations[0].obs_date == "2023-01-01"
+        assert observations[0].unit == "%"
+        # Verify data is sorted descending by date
+        assert observations[0].obs_date > observations[1].obs_date
+        assert observations[1].obs_date > observations[2].obs_date
+
+    def test_imf_connector_normalize_with_none_values(self, connector, config):
+        """Test normalization skips None values."""
+        raw_data = {
+            "NGDP_RPCH": {
+                "CHN": {
+                    "2023": 5.4,
+                    "2022": None,
+                    "2021": 8.6
+                }
+            }
+        }
+
+        observations = connector.normalize(config, raw_data)
+
+        assert len(observations) == 2  # None value skipped
+        assert observations[0].value == 5.4
+        assert observations[1].value == 8.6
+
+    def test_imf_connector_normalize_empty_data(self, connector, config):
+        """Test normalization handles empty data gracefully."""
+        raw_data = {}
+
+        observations = connector.normalize(config, raw_data)
+
+        assert len(observations) == 0

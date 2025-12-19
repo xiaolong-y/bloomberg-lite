@@ -31,6 +31,7 @@ class ConnectorConfig:
     series_key: Optional[str] = None  # ECB
     indicator: Optional[str] = None  # World Bank
     country: Optional[str] = None    # World Bank
+    indicator_code: Optional[str] = None  # e-Stat Dashboard
 
 
 @dataclass

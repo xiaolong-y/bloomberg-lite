@@ -13,7 +13,7 @@ API Notes:
 """
 import os
 from datetime import datetime
-from typing import Any
+from typing import Any, Optional
 
 import requests
 
@@ -27,7 +27,7 @@ class FREDConnector(BaseMetricConnector):
     SOURCE_NAME = "fred"
     BASE_URL = "https://api.stlouisfed.org/fred"
 
-    def __init__(self, api_key: str | None = None):
+    def __init__(self, api_key: Optional[str] = None):
         self.api_key = api_key or os.environ.get("FRED_API_KEY")
         if not self.api_key:
             raise ValueError(

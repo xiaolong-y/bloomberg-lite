@@ -13,7 +13,7 @@ Algolia API:
 - Faster for bulk retrieval
 """
 from datetime import datetime
-from typing import Any
+from typing import Any, Optional
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import requests
@@ -77,7 +77,7 @@ class HNFirebaseConnector(BaseFeedConnector):
                 source=self.SOURCE_NAME
             )
 
-    def _fetch_item(self, item_id: int) -> dict | None:
+    def _fetch_item(self, item_id: int) -> Optional[dict]:
         """Fetch a single HN item."""
         try:
             response = requests.get(

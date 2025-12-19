@@ -143,8 +143,77 @@ metrics:
     decimals: 1
 
   # ============================================
-  # JAPAN (via FRED)
+  # CHINA (via IMF DataMapper - alternative authoritative source)
   # ============================================
+  - id: china.gdp_growth_imf
+    name: "China GDP Growth (IMF)"
+    source: imf
+    # IMF World Economic Outlook - Real GDP growth (annual percent change)
+    indicator: NGDP_RPCH
+    country: CHN
+    frequency: annual
+    unit: "%"
+    decimals: 1
+
+  - id: china.cpi_yoy_imf
+    name: "China CPI YoY (IMF)"
+    source: imf
+    # IMF - Inflation, average consumer prices (annual percent change)
+    indicator: PCPIPCH
+    country: CHN
+    frequency: annual
+    unit: "%"
+    decimals: 1
+
+  - id: china.unemployment_imf
+    name: "China Unemployment (IMF)"
+    source: imf
+    # IMF - Unemployment rate (percent of total labor force)
+    indicator: LUR
+    country: CHN
+    frequency: annual
+    unit: "%"
+    decimals: 1
+
+  - id: china.current_account_imf
+    name: "China Current Account % GDP (IMF)"
+    source: imf
+    # IMF - Current account balance (percent of GDP)
+    indicator: BCA_NGDPD
+    country: CHN
+    frequency: annual
+    unit: "% GDP"
+    decimals: 1
+
+  # ============================================
+  # JAPAN (via e-Stat Dashboard + FRED)
+  # ============================================
+  # e-Stat Dashboard: Official Japanese government statistics (NO AUTH REQUIRED)
+  - id: japan.gdp_qoq
+    name: "Japan GDP QoQ"
+    source: estat_dashboard
+    indicator_code: "0705020401000060000"  # Real GDP, annualized QoQ%, 2015 base, seasonally adjusted
+    frequency: quarterly
+    unit: "%"
+    decimals: 1
+
+  - id: japan.unemployment
+    name: "Japan Unemployment"
+    source: estat_dashboard
+    indicator_code: "0301010000020020010"  # Complete unemployment rate (both sexes)
+    frequency: monthly
+    unit: "%"
+    decimals: 1
+
+  - id: japan.industrial_production
+    name: "Japan Industrial Production"
+    source: estat_dashboard
+    indicator_code: "0502070301000090010"  # Mining & manufacturing production index, 2020 base
+    frequency: monthly
+    unit: "index"
+    decimals: 1
+
+  # FRED-sourced Japan data (for comparison/redundancy)
   - id: japan.policy_rate
     name: "BoJ Policy Rate"
     source: fred
@@ -190,7 +259,7 @@ groups:
     metrics: [eu.deposit_rate, eu.hicp_yoy, eu.unemployment]
 
   - name: "Asia Pacific"
-    metrics: [china.gdp_growth, china.cpi_yoy, japan.policy_rate, japan.cpi_yoy]
+    metrics: [china.gdp_growth, china.cpi_yoy, china.gdp_growth_imf, china.cpi_yoy_imf, china.unemployment_imf, china.current_account_imf, japan.gdp_qoq, japan.unemployment, japan.industrial_production, japan.policy_rate, japan.cpi_yoy]
 
   - name: "Global Markets"
     metrics: [global.brent, global.dxy]
