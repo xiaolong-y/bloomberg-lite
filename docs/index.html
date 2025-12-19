@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Personal macro & tech intelligence dashboard">
-  <title>Bloomberg-Lite | 2025-12-19 01:05 UTC</title>
+  <title>Bloomberg-Lite | 2025-12-19 04:06 UTC</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
@@ -185,6 +185,9 @@
       letter-spacing: -1.5px;
       font-family: 'IBM Plex Mono', monospace;
       line-height: 1;
+      display: flex;
+      align-items: center;
+      gap: 2px;
     }
 
     .metric-data {
@@ -265,10 +268,12 @@
       font-variant-numeric: tabular-nums;
     }
 
-    .story-score::before {
-      content: '\25B2';
-      font-size: 6px;
-      margin-top: 2px;
+    .heat-indicator {
+      margin-right: 2px;
+    }
+
+    .story-score .heat-indicator + ::before {
+      display: none;
     }
 
     .story-content {
@@ -300,10 +305,20 @@
     .story-meta {
       color: var(--muted);
       font-size: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
 
-    .story-meta span {
-      margin-right: 6px;
+    .time-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 1px;
+    }
+
+    .meta-sep {
+      color: var(--muted);
+      opacity: 0.5;
     }
 
     /* Sidebar Feeds - Dense grid */
@@ -341,16 +356,10 @@
     .sidebar-score {
       color: var(--yellow);
       font-weight: 500;
-      min-width: 28px;
+      min-width: 32px;
       text-align: right;
       font-variant-numeric: tabular-nums;
       font-size: 9px;
-    }
-
-    .sidebar-score::before {
-      content: '\25B2';
-      font-size: 5px;
-      margin-right: 1px;
     }
 
     .sidebar-title {
@@ -452,14 +461,14 @@
     <h1>Bloomberg-Lite</h1>
     <span class="badge">Live</span>
   </div>
-  <span class="timestamp">Updated: 2025-12-19 01:05 UTC</span>
+  <span class="timestamp">Updated: 2025-12-19 04:06 UTC</span>
 </header>
 
 <div class="dashboard">
   
   
   <section class="panel metrics-panel">
-    <div class="panel-title">US Economy</div>
+    <div class="panel-title">🇺🇸 US Economy</div>
     
       <div class="metric-grid">
       
@@ -534,7 +543,7 @@
   </section>
   
   <section class="panel metrics-panel">
-    <div class="panel-title">Eurozone</div>
+    <div class="panel-title">🇪🇺 Eurozone</div>
     
       <div class="metric-grid single-col">
       
@@ -553,7 +562,7 @@
         <div class="metric-info">
           <div class="metric-name">Eurozone HICP YoY</div>
           
-          <div class="sparkline">█▆▆ ▂▂▂▆▄▄</div>
+          <div class="sparkline">→█▆▆ ▂▂▂▆▄▄</div>
           
         </div>
         <div class="metric-data">
@@ -578,7 +587,7 @@
   </section>
   
   <section class="panel metrics-panel">
-    <div class="panel-title">Asia Pacific</div>
+    <div class="panel-title">🌏 Asia Pacific</div>
     
       <div class="metric-grid">
       
@@ -601,6 +610,97 @@
         <div class="metric-data">
           <div class="metric-value">—</div>
           <div class="metric-change "></div>
+        </div>
+      </div>
+      
+      <div class="metric">
+        <div class="metric-info">
+          <div class="metric-name">China GDP Growth (IMF)</div>
+          
+          <div class="sparkline">⬇█ ▃▂▂▁▁▁  </div>
+          
+        </div>
+        <div class="metric-data">
+          <div class="metric-value">3.4%</div>
+          <div class="metric-change down">-0.30pp</div>
+        </div>
+      </div>
+      
+      <div class="metric">
+        <div class="metric-info">
+          <div class="metric-name">China CPI YoY (IMF)</div>
+          
+          <div class="sparkline">⬆▃█   ▂▅▇▇█</div>
+          
+        </div>
+        <div class="metric-data">
+          <div class="metric-value">2.0%</div>
+          <div class="metric-change up">+0.10pp</div>
+        </div>
+      </div>
+      
+      <div class="metric">
+        <div class="metric-info">
+          <div class="metric-name">China Unemployment (IMF)</div>
+          
+          <div class="sparkline">→ █▁       </div>
+          
+        </div>
+        <div class="metric-data">
+          <div class="metric-value">5.1%</div>
+          <div class="metric-change ">0.00pp</div>
+        </div>
+      </div>
+      
+      <div class="metric">
+        <div class="metric-info">
+          <div class="metric-name">China Current Account % GDP (IMF)</div>
+          
+          <div class="sparkline">⬇▂▄ ▃█▅▄▄▃▂</div>
+          
+        </div>
+        <div class="metric-data">
+          <div class="metric-value">2.10</div>
+          <div class="metric-change down">-0.10</div>
+        </div>
+      </div>
+      
+      <div class="metric">
+        <div class="metric-info">
+          <div class="metric-name">Japan GDP QoQ</div>
+          
+          <div class="sparkline">⬇▆ ▇▃▆█▆▆▇▃</div>
+          
+        </div>
+        <div class="metric-data">
+          <div class="metric-value">-2.3%</div>
+          <div class="metric-change down">-4.40pp</div>
+        </div>
+      </div>
+      
+      <div class="metric">
+        <div class="metric-info">
+          <div class="metric-name">Japan Unemployment</div>
+          
+          <div class="sparkline">⬇██▂▅▅█ ▂█▅</div>
+          
+        </div>
+        <div class="metric-data">
+          <div class="metric-value">2.5%</div>
+          <div class="metric-change down">-0.10pp</div>
+        </div>
+      </div>
+      
+      <div class="metric">
+        <div class="metric-info">
+          <div class="metric-name">Japan Industrial Production</div>
+          
+          <div class="sparkline">⬇▄▅█   ▁ ▁▁</div>
+          
+        </div>
+        <div class="metric-data">
+          <div class="metric-value">101.6</div>
+          <div class="metric-change down">-0.40</div>
         </div>
       </div>
       
@@ -631,24 +731,13 @@
   </section>
   
   <section class="panel metrics-panel">
-    <div class="panel-title">Global Markets</div>
+    <div class="panel-title">🌐 Global Markets</div>
     
       <div class="metric-grid single-col">
       
       <div class="metric">
         <div class="metric-info">
           <div class="metric-name">global.brent</div>
-          
-        </div>
-        <div class="metric-data">
-          <div class="metric-value">—</div>
-          <div class="metric-change "></div>
-        </div>
-      </div>
-      
-      <div class="metric">
-        <div class="metric-info">
-          <div class="metric-name">global.gold</div>
           
         </div>
         <div class="metric-data">
@@ -673,7 +762,7 @@
   </section>
   
   <section class="panel metrics-panel">
-    <div class="panel-title">Crypto</div>
+    <div class="panel-title">₿ Crypto</div>
     
       <div class="metric-grid single-col">
       
@@ -706,7 +795,7 @@
 
   
   <section class="panel stories-panel">
-    <div class="panel-title">Tech Discussion</div>
+    <div class="panel-title">💻 Tech Discussion</div>
     
     
       
@@ -725,7 +814,7 @@
     
       
       <div class="story">
-        <div class="story-score">1229</div>
+        <div class="story-score"><span class="heat-indicator">🔥</span>1451</div>
         <div class="story-content">
           <div class="story-title">
             <a href="https://dl.acm.org/openaccess" target="_blank" rel="noopener">
@@ -733,31 +822,17 @@
             </a>
           </div>
           <div class="story-meta">
-            <span>14h</span>
-            <span>138 cmt</span>
+            <span class="time-indicator">🕐17h</span>
+            <span class="meta-sep">·</span>
+            <span>156 cmt</span>
+            <span class="meta-sep">·</span>
             <a href="https://news.ycombinator.com/item?id=46313991" target="_blank" rel="noopener">hn</a>
           </div>
         </div>
       </div>
       
       <div class="story">
-        <div class="story-score">533</div>
-        <div class="story-content">
-          <div class="story-title">
-            <a href="https://worksinprogress.co/issue/were-classical-statues-painted-horribly/" target="_blank" rel="noopener">
-              Classical statues were not painted horribly <span class="domain">(worksinprogress.co)</span>
-            </a>
-          </div>
-          <div class="story-meta">
-            <span>17h</span>
-            <span>263 cmt</span>
-            <a href="https://news.ycombinator.com/item?id=46311856" target="_blank" rel="noopener">hn</a>
-          </div>
-        </div>
-      </div>
-      
-      <div class="story">
-        <div class="story-score">511</div>
+        <div class="story-score"><span class="heat-indicator">⚡</span>676</div>
         <div class="story-content">
           <div class="story-title">
             <a href="https://gist.github.com/hackermondev/5e2cdc32849405fff6b46957747a2d28" target="_blank" rel="noopener">
@@ -765,15 +840,17 @@
             </a>
           </div>
           <div class="story-meta">
-            <span>10h</span>
-            <span>202 cmt</span>
+            <span class="time-indicator">🕐13h</span>
+            <span class="meta-sep">·</span>
+            <span>279 cmt</span>
+            <span class="meta-sep">·</span>
             <a href="https://news.ycombinator.com/item?id=46317098" target="_blank" rel="noopener">hn</a>
           </div>
         </div>
       </div>
       
       <div class="story">
-        <div class="story-score">409</div>
+        <div class="story-score"><span class="heat-indicator">⚡</span>596</div>
         <div class="story-content">
           <div class="story-title">
             <a href="https://www.theverge.com/news/845400/texas-tv-makers-lawsuit-samsung-sony-lg-hisense-tcl-spying" target="_blank" rel="noopener">
@@ -781,15 +858,35 @@
             </a>
           </div>
           <div class="story-meta">
-            <span>2d</span>
-            <span>229 cmt</span>
+            <span class="time-indicator">📅2d</span>
+            <span class="meta-sep">·</span>
+            <span>304 cmt</span>
+            <span class="meta-sep">·</span>
             <a href="https://news.ycombinator.com/item?id=46294456" target="_blank" rel="noopener">hn</a>
           </div>
         </div>
       </div>
       
       <div class="story">
-        <div class="story-score">329</div>
+        <div class="story-score"><span class="heat-indicator">⚡</span>574</div>
+        <div class="story-content">
+          <div class="story-title">
+            <a href="https://worksinprogress.co/issue/were-classical-statues-painted-horribly/" target="_blank" rel="noopener">
+              Classical statues were not painted horribly <span class="domain">(worksinprogress.co)</span>
+            </a>
+          </div>
+          <div class="story-meta">
+            <span class="time-indicator">🕐20h</span>
+            <span class="meta-sep">·</span>
+            <span>272 cmt</span>
+            <span class="meta-sep">·</span>
+            <a href="https://news.ycombinator.com/item?id=46311856" target="_blank" rel="noopener">hn</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="story">
+        <div class="story-score"><span class="heat-indicator">✦</span>414</div>
         <div class="story-content">
           <div class="story-title">
             <a href="https://openai.com/index/introducing-gpt-5-2-codex/" target="_blank" rel="noopener">
@@ -797,15 +894,17 @@
             </a>
           </div>
           <div class="story-meta">
-            <span>11h</span>
-            <span>188 cmt</span>
+            <span class="time-indicator">🕐14h</span>
+            <span class="meta-sep">·</span>
+            <span>221 cmt</span>
+            <span class="meta-sep">·</span>
             <a href="https://news.ycombinator.com/item?id=46316367" target="_blank" rel="noopener">hn</a>
           </div>
         </div>
       </div>
       
       <div class="story">
-        <div class="story-score">230</div>
+        <div class="story-score"><span class="heat-indicator">✦</span>313</div>
         <div class="story-content">
           <div class="story-title">
             <a href="https://mastodon.social/@firefoxwebdevs/115740500373677782" target="_blank" rel="noopener">
@@ -813,31 +912,35 @@
             </a>
           </div>
           <div class="story-meta">
-            <span>11h</span>
-            <span>208 cmt</span>
+            <span class="time-indicator">🕐14h</span>
+            <span class="meta-sep">·</span>
+            <span>273 cmt</span>
+            <span class="meta-sep">·</span>
             <a href="https://news.ycombinator.com/item?id=46316409" target="_blank" rel="noopener">hn</a>
           </div>
         </div>
       </div>
       
       <div class="story">
-        <div class="story-score">221</div>
+        <div class="story-score"><span class="heat-indicator">✦</span>285</div>
         <div class="story-content">
           <div class="story-title">
-            <a href="https://claude.com/blog/organization-skills-and-directory" target="_blank" rel="noopener">
-              Skills for organizations, partners, the ecosystem <span class="domain">(claude.com)</span>
+            <a href="https://github.com/DGoettlich/history-llms" target="_blank" rel="noopener">
+              Trained LLMs exclusively on pre-1913 texts <span class="domain">(github.com)</span>
             </a>
           </div>
           <div class="story-meta">
-            <span>13h</span>
-            <span>138 cmt</span>
-            <a href="https://news.ycombinator.com/item?id=46315414" target="_blank" rel="noopener">hn</a>
+            <span class="time-indicator">🕐10h</span>
+            <span class="meta-sep">·</span>
+            <span>96 cmt</span>
+            <span class="meta-sep">·</span>
+            <a href="https://news.ycombinator.com/item?id=46319826" target="_blank" rel="noopener">hn</a>
           </div>
         </div>
       </div>
       
       <div class="story">
-        <div class="story-score">158</div>
+        <div class="story-score"><span class="heat-indicator">✦</span>254</div>
         <div class="story-content">
           <div class="story-title">
             <a href="https://www.japantimes.co.jp/business/2025/12/18/tech/china-west-ai-chips/" target="_blank" rel="noopener">
@@ -845,111 +948,35 @@
             </a>
           </div>
           <div class="story-meta">
-            <span>11h</span>
-            <span>161 cmt</span>
+            <span class="time-indicator">🕐14h</span>
+            <span class="meta-sep">·</span>
+            <span>259 cmt</span>
+            <span class="meta-sep">·</span>
             <a href="https://news.ycombinator.com/item?id=46316907" target="_blank" rel="noopener">hn</a>
           </div>
         </div>
       </div>
       
       <div class="story">
-        <div class="story-score">130</div>
+        <div class="story-score"><span class="heat-indicator">✦</span>241</div>
         <div class="story-content">
           <div class="story-title">
-            <a href="https://blog.google/technology/developers/functiongemma/" target="_blank" rel="noopener">
-              FunctionGemma 270M Model <span class="domain">(blog.google)</span>
+            <a href="https://claude.com/blog/organization-skills-and-directory" target="_blank" rel="noopener">
+              Skills for organizations, partners, the ecosystem <span class="domain">(claude.com)</span>
             </a>
           </div>
           <div class="story-meta">
-            <span>11h</span>
-            <span>37 cmt</span>
-            <a href="https://news.ycombinator.com/item?id=46316533" target="_blank" rel="noopener">hn</a>
+            <span class="time-indicator">🕐16h</span>
+            <span class="meta-sep">·</span>
+            <span>141 cmt</span>
+            <span class="meta-sep">·</span>
+            <a href="https://news.ycombinator.com/item?id=46315414" target="_blank" rel="noopener">hn</a>
           </div>
         </div>
       </div>
       
       <div class="story">
-        <div class="story-score">124</div>
-        <div class="story-content">
-          <div class="story-title">
-            <a href="https://ai.meta.com/samaudio/" target="_blank" rel="noopener">
-              Meta Segment Anything Model Audio <span class="domain">(ai.meta.com)</span>
-            </a>
-          </div>
-          <div class="story-meta">
-            <span>2d</span>
-            <span>14 cmt</span>
-            <a href="https://news.ycombinator.com/item?id=46292266" target="_blank" rel="noopener">hn</a>
-          </div>
-        </div>
-      </div>
-      
-      <div class="story">
-        <div class="story-score">117</div>
-        <div class="story-content">
-          <div class="story-title">
-            <a href="https://mjg59.dreamwidth.org/73777.html" target="_blank" rel="noopener">
-              How did IRC ping timeouts end up in a lawsuit? <span class="domain">(mjg59.dreamwidth.org)</span>
-            </a>
-          </div>
-          <div class="story-meta">
-            <span>1d</span>
-            <span>13 cmt</span>
-            <a href="https://news.ycombinator.com/item?id=46303406" target="_blank" rel="noopener">hn</a>
-          </div>
-        </div>
-      </div>
-      
-      <div class="story">
-        <div class="story-score">106</div>
-        <div class="story-content">
-          <div class="story-title">
-            <a href="https://github.com/vivienhenz24/fuzzy-canary" target="_blank" rel="noopener">
-              Show HN: Stop AI scrapers from hammering your self-hosted blog (using porn) <span class="domain">(github.com)</span>
-            </a>
-          </div>
-          <div class="story-meta">
-            <span>2d</span>
-            <span>72 cmt</span>
-            <a href="https://news.ycombinator.com/item?id=46294144" target="_blank" rel="noopener">hn</a>
-          </div>
-        </div>
-      </div>
-      
-      <div class="story">
-        <div class="story-score">92</div>
-        <div class="story-content">
-          <div class="story-title">
-            <a href="https://jgthms.com/picknplace.js/" target="_blank" rel="noopener">
-              Show HN: Picknplace.js, an alternative to drag-and-drop <span class="domain">(jgthms.com)</span>
-            </a>
-          </div>
-          <div class="story-meta">
-            <span>2d</span>
-            <span>54 cmt</span>
-            <a href="https://news.ycombinator.com/item?id=46290349" target="_blank" rel="noopener">hn</a>
-          </div>
-        </div>
-      </div>
-      
-      <div class="story">
-        <div class="story-score">92</div>
-        <div class="story-content">
-          <div class="story-title">
-            <a href="https://kibty.town/blog/mintlify/" target="_blank" rel="noopener">
-              How to hack Discord, Vercel and more with one easy trick <span class="domain">(kibty.town)</span>
-            </a>
-          </div>
-          <div class="story-meta">
-            <span>10h</span>
-            <span>17 cmt</span>
-            <a href="https://news.ycombinator.com/item?id=46317546" target="_blank" rel="noopener">hn</a>
-          </div>
-        </div>
-      </div>
-      
-      <div class="story">
-        <div class="story-score">87</div>
+        <div class="story-score"><span class="heat-indicator">✦</span>240</div>
         <div class="story-content">
           <div class="story-title">
             <a href="https://www.jeffgeerling.com/blog/2025/15-tb-vram-on-mac-studio-rdma-over-thunderbolt-5" target="_blank" rel="noopener">
@@ -957,9 +984,101 @@
             </a>
           </div>
           <div class="story-meta">
-            <span>7h</span>
-            <span>29 cmt</span>
+            <span class="time-indicator">🕐10h</span>
+            <span class="meta-sep">·</span>
+            <span>85 cmt</span>
+            <span class="meta-sep">·</span>
             <a href="https://news.ycombinator.com/item?id=46319657" target="_blank" rel="noopener">hn</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="story">
+        <div class="story-score"><span class="heat-indicator">•</span>175</div>
+        <div class="story-content">
+          <div class="story-title">
+            <a href="https://jgthms.com/picknplace.js/" target="_blank" rel="noopener">
+              Show HN: Picknplace.js, an alternative to drag-and-drop <span class="domain">(jgthms.com)</span>
+            </a>
+          </div>
+          <div class="story-meta">
+            <span class="time-indicator">📅2d</span>
+            <span class="meta-sep">·</span>
+            <span>84 cmt</span>
+            <span class="meta-sep">·</span>
+            <a href="https://news.ycombinator.com/item?id=46290349" target="_blank" rel="noopener">hn</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="story">
+        <div class="story-score"><span class="heat-indicator">•</span>168</div>
+        <div class="story-content">
+          <div class="story-title">
+            <a href="https://ai.meta.com/samaudio/" target="_blank" rel="noopener">
+              Meta Segment Anything Model Audio <span class="domain">(ai.meta.com)</span>
+            </a>
+          </div>
+          <div class="story-meta">
+            <span class="time-indicator">📅2d</span>
+            <span class="meta-sep">·</span>
+            <span>23 cmt</span>
+            <span class="meta-sep">·</span>
+            <a href="https://news.ycombinator.com/item?id=46292266" target="_blank" rel="noopener">hn</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="story">
+        <div class="story-score"><span class="heat-indicator">•</span>167</div>
+        <div class="story-content">
+          <div class="story-title">
+            <a href="https://blog.google/technology/developers/functiongemma/" target="_blank" rel="noopener">
+              FunctionGemma 270M Model <span class="domain">(blog.google)</span>
+            </a>
+          </div>
+          <div class="story-meta">
+            <span class="time-indicator">🕐14h</span>
+            <span class="meta-sep">·</span>
+            <span>44 cmt</span>
+            <span class="meta-sep">·</span>
+            <a href="https://news.ycombinator.com/item?id=46316533" target="_blank" rel="noopener">hn</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="story">
+        <div class="story-score"><span class="heat-indicator">•</span>160</div>
+        <div class="story-content">
+          <div class="story-title">
+            <a href="https://github.com/vivienhenz24/fuzzy-canary" target="_blank" rel="noopener">
+              Show HN: Stop AI scrapers from hammering your self-hosted blog (using porn) <span class="domain">(github.com)</span>
+            </a>
+          </div>
+          <div class="story-meta">
+            <span class="time-indicator">📅2d</span>
+            <span class="meta-sep">·</span>
+            <span>119 cmt</span>
+            <span class="meta-sep">·</span>
+            <a href="https://news.ycombinator.com/item?id=46294144" target="_blank" rel="noopener">hn</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="story">
+        <div class="story-score"><span class="heat-indicator">•</span>129</div>
+        <div class="story-content">
+          <div class="story-title">
+            <a href="https://kottke.org/25/12/this-ai-vending-machine-was-tricked-into-giving-away-everything" target="_blank" rel="noopener">
+              AI vending machine was tricked into giving away everything <span class="domain">(kottke.org)</span>
+            </a>
+          </div>
+          <div class="story-meta">
+            <span class="time-indicator">🕐11h</span>
+            <span class="meta-sep">·</span>
+            <span>24 cmt</span>
+            <span class="meta-sep">·</span>
+            <a href="https://news.ycombinator.com/item?id=46319324" target="_blank" rel="noopener">hn</a>
           </div>
         </div>
       </div>
@@ -975,11 +1094,11 @@
     
       
       <section class="panel">
-        <div class="panel-title">AI/ML</div>
+        <div class="panel-title">🤖 AI/ML</div>
         
           
           <div class="sidebar-story">
-            <div class="sidebar-score">826</div>
+            <div class="sidebar-score">⚡826</div>
             <div class="sidebar-title">
               <a href="https://www.koi.ai/blog/urban-vpn-browser-extension-ai-conversations-data-collection" target="_blank" rel="noopener">
                 8M users&#39; AI conversations sold for profit by &#34;privacy&#34; extensions <span class="domain">(koi.ai)</span>
@@ -988,7 +1107,7 @@
           </div>
           
           <div class="sidebar-story">
-            <div class="sidebar-score">816</div>
+            <div class="sidebar-score">⚡817</div>
             <div class="sidebar-title">
               <a href="https://martin.kleppmann.com/2025/12/08/ai-formal-verification.html" target="_blank" rel="noopener">
                 AI will make formal verification go mainstream <span class="domain">(martin.kleppmann.com)</span>
@@ -997,7 +1116,7 @@
           </div>
           
           <div class="sidebar-story">
-            <div class="sidebar-score">586</div>
+            <div class="sidebar-score">⚡586</div>
             <div class="sidebar-title">
               <a href="https://english.elpais.com/technology/2025-11-30/if-ai-replaces-workers-should-it-also-pay-taxes.html" target="_blank" rel="noopener">
                 If AI replaces workers, should it also pay taxes? <span class="domain">(english.elpais.com)</span>
@@ -1006,7 +1125,7 @@
           </div>
           
           <div class="sidebar-story">
-            <div class="sidebar-score">551</div>
+            <div class="sidebar-score">⚡555</div>
             <div class="sidebar-title">
               <a href="https://www.waterfox.com/blog/no-ai-here-response-to-mozilla/" target="_blank" rel="noopener">
                 No AI* Here – A Response to Mozilla&#39;s Next Chapter <span class="domain">(waterfox.com)</span>
@@ -1015,7 +1134,7 @@
           </div>
           
           <div class="sidebar-story">
-            <div class="sidebar-score">537</div>
+            <div class="sidebar-score">⚡537</div>
             <div class="sidebar-title">
               <a href="https://developer.apple.com/documentation/macos-release-notes/macos-26_2-release-notes#RDMA-over-Thunderbolt" target="_blank" rel="noopener">
                 macOS 26.2 enables fast AI clusters with RDMA over Thunderbolt <span class="domain">(developer.apple.com)</span>
@@ -1024,7 +1143,7 @@
           </div>
           
           <div class="sidebar-story">
-            <div class="sidebar-score">466</div>
+            <div class="sidebar-score">✦466</div>
             <div class="sidebar-title">
               <a href="https://news.ycombinator.com/item?id=46255285" target="_blank" rel="noopener">
                 Ask HN: How can I get better at using AI for programming?
@@ -1033,7 +1152,7 @@
           </div>
           
           <div class="sidebar-story">
-            <div class="sidebar-score">404</div>
+            <div class="sidebar-score">✦406</div>
             <div class="sidebar-title">
               <a href="https://martinalderson.com/posts/ai-agents-are-starting-to-eat-saas/" target="_blank" rel="noopener">
                 AI agents are starting to eat SaaS <span class="domain">(martinalderson.com)</span>
@@ -1042,7 +1161,7 @@
           </div>
           
           <div class="sidebar-story">
-            <div class="sidebar-score">376</div>
+            <div class="sidebar-score">✦376</div>
             <div class="sidebar-title">
               <a href="https://www.reuters.com/world/americas/jetblue-flight-averts-mid-air-collision-with-us-air-force-jet-2025-12-15/" target="_blank" rel="noopener">
                 JetBlue flight averts mid-air collision with US Air Force jet <span class="domain">(reuters.com)</span>
@@ -1056,7 +1175,7 @@
     
       
       <section class="panel">
-        <div class="panel-title">Infrastructure</div>
+        <div class="panel-title">🏗 Infrastructure</div>
         
           <div class="empty-state">No stories</div>
         
@@ -1065,7 +1184,7 @@
     
       
       <section class="panel">
-        <div class="panel-title">Markets &amp; Finance</div>
+        <div class="panel-title">📊 Markets &amp; Finance</div>
         
           <div class="empty-state">No stories</div>
         
@@ -1074,11 +1193,11 @@
     
       
       <section class="panel">
-        <div class="panel-title">China Tech</div>
+        <div class="panel-title">🇨🇳 China Tech</div>
         
           
           <div class="sidebar-story">
-            <div class="sidebar-score">33</div>
+            <div class="sidebar-score">•33</div>
             <div class="sidebar-title">
               <a href="https://www.carbonbrief.org/analysis-chinas-co2-emissions-have-now-been-flat-or-falling-for-18-months/" target="_blank" rel="noopener">
                 China&#39;s CO2 emissions have now been flat or falling for 18 months <span class="domain">(carbonbrief.org)</span>
@@ -1087,7 +1206,7 @@
           </div>
           
           <div class="sidebar-story">
-            <div class="sidebar-score">25</div>
+            <div class="sidebar-score">•25</div>
             <div class="sidebar-title">
               <a href="https://apnews.com/article/whistleblower-china-surveillance-tech-silicon-valley-adbd0bcfbb0892bfcb85948acb3f515f" target="_blank" rel="noopener">
                 A Chinese whistleblower living in the US is being hunted by... <span class="domain">(apnews.com)</span>
@@ -1096,7 +1215,7 @@
           </div>
           
           <div class="sidebar-story">
-            <div class="sidebar-score">21</div>
+            <div class="sidebar-score">•21</div>
             <div class="sidebar-title">
               <a href="https://www.scmp.com/news/china/science/article/3335518/chinese-desalination-plant-makes-fresh-water-cheaper-tap-water-plus-green-hydrogen" target="_blank" rel="noopener">
                 Chinese desalination plant makes fresh water cheaper than tap water <span class="domain">(scmp.com)</span>
@@ -1105,7 +1224,7 @@
           </div>
           
           <div class="sidebar-story">
-            <div class="sidebar-score">20</div>
+            <div class="sidebar-score">•20</div>
             <div class="sidebar-title">
               <a href="https://www.wsj.com/world/china/ice-holding-chinese-man-who-documented-uyghur-camps-a4702045" target="_blank" rel="noopener">
                 ICE Holding Chinese Man Who Documented Uyghur Camps <span class="domain">(wsj.com)</span>
@@ -1122,8 +1241,8 @@
 </div>
 
 <footer>
-  <p>Data sources: FRED, ECB, World Bank, Hacker News |
-     <a href="https://github.com/your-repo/bloomberg-lite">GitHub</a></p>
+  <p>📊 Data: FRED · OECD · World Bank · ECB · HN |
+     <a href="https://github.com/xiaolong-y/bloomberg-lite">GitHub</a></p>
 </footer>
 
 </body>
