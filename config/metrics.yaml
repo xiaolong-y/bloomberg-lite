@@ -62,14 +62,13 @@ metrics:
     multiplier: 100  # Convert to basis points
 
   # ============================================
-  # EUROZONE (via ECB SDMX)
+  # EUROZONE (via FRED - ECB/OECD sourced)
   # ============================================
   - id: eu.deposit_rate
     name: "ECB Deposit Rate"
-    source: ecb
-    dataflow: FM
-    series_key: M.U2.EUR.4F.KR.DFR.LEV
-    frequency: monthly
+    source: fred
+    series_id: ECBDFR
+    frequency: daily
     unit: "%"
     decimals: 2
 
@@ -84,9 +83,8 @@ metrics:
 
   - id: eu.unemployment
     name: "Eurozone Unemployment"
-    source: ecb
-    dataflow: STS
-    series_key: M.I9.S.UNEH.RTT000.4.000
+    source: fred
+    series_id: LRHUTTTTEZM156S
     frequency: monthly
     unit: "%"
     decimals: 1
@@ -101,14 +99,6 @@ metrics:
     frequency: daily
     unit: "$/bbl"
     decimals: 2
-
-  - id: global.gold
-    name: "Gold (London PM)"
-    source: fred
-    series_id: GOLDPMGBD228NLBM
-    frequency: daily
-    unit: "$/oz"
-    decimals: 0
 
   - id: global.dxy
     name: "USD Trade Weighted"
@@ -132,7 +122,7 @@ metrics:
     decimals: 1
 
   # ============================================
-  # CHINA (via World Bank)
+  # CHINA (GDP via World Bank, CPI via FRED/OECD)
   # ============================================
   - id: china.gdp_growth
     name: "China GDP Growth"
@@ -145,10 +135,10 @@ metrics:
 
   - id: china.cpi_yoy
     name: "China CPI YoY"
-    source: worldbank
-    indicator: FP.CPI.TOTL.ZG
-    country: CHN
-    frequency: annual
+    source: fred
+    # OECD monthly CPI growth rate - more timely than World Bank annual
+    series_id: CPALTT01CNM657N
+    frequency: monthly
     unit: "%"
     decimals: 1
 
@@ -203,7 +193,7 @@ groups:
     metrics: [china.gdp_growth, china.cpi_yoy, japan.policy_rate, japan.cpi_yoy]
 
   - name: "Global Markets"
-    metrics: [global.brent, global.gold, global.dxy]
+    metrics: [global.brent, global.dxy]
 
   - name: "Crypto"
     metrics: [crypto.bitcoin, crypto.ethereum]
