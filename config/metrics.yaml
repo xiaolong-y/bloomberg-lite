@@ -1,5 +1,6 @@
 # Metric Configuration Schema
 # Each metric defines: identifier, display name, data source, and optional transforms
+# ALL SOURCES ARE FREE AND REQUIRE NO API KEY
 
 defaults:
   cache_hours: 6
@@ -7,71 +8,56 @@ defaults:
 
 metrics:
   # ============================================
-  # UNITED STATES (via FRED)
+  # UNITED STATES (via IMF - no auth required)
   # ============================================
-  - id: us.fed_funds
-    name: "Fed Funds Rate"
-    source: fred
-    series_id: FEDFUNDS
-    frequency: monthly
+  - id: us.gdp_growth
+    name: "US GDP Growth"
+    source: imf
+    indicator: NGDP_RPCH
+    country: USA
+    frequency: annual
     unit: "%"
-    decimals: 2
+    decimals: 1
 
   - id: us.cpi_yoy
     name: "US CPI YoY"
-    source: fred
-    series_id: CPIAUCSL
-    frequency: monthly
+    source: imf
+    indicator: PCPIPCH
+    country: USA
+    frequency: annual
     unit: "%"
     decimals: 1
-    transform: yoy_percent
-
-  - id: us.core_cpi_yoy
-    name: "US Core CPI YoY"
-    source: fred
-    series_id: CPILFESL
-    frequency: monthly
-    unit: "%"
-    decimals: 1
-    transform: yoy_percent
 
   - id: us.unemployment
     name: "US Unemployment"
-    source: fred
-    series_id: UNRATE
-    frequency: monthly
+    source: imf
+    indicator: LUR
+    country: USA
+    frequency: annual
     unit: "%"
     decimals: 1
 
-  - id: us.gdp_qoq
-    name: "US GDP QoQ"
-    source: fred
-    # A191RL1Q225SBEA = Real GDP growth rate, annualized (already a %)
-    series_id: A191RL1Q225SBEA
-    frequency: quarterly
-    unit: "%"
+  - id: us.current_account
+    name: "US Current Account"
+    source: imf
+    indicator: BCA_NGDPD
+    country: USA
+    frequency: annual
+    unit: "% GDP"
     decimals: 1
 
-  - id: us.yield_curve
-    name: "10Y-2Y Spread"
-    source: fred
-    series_id: T10Y2Y
-    frequency: daily
-    unit: "bp"
-    decimals: 0
-    multiplier: 100  # Convert to basis points
+  - id: us.gov_debt
+    name: "US Gov Debt"
+    source: imf
+    indicator: GGXWDG_NGDP
+    country: USA
+    frequency: annual
+    unit: "% GDP"
+    decimals: 1
 
   # ============================================
-  # EUROZONE (via FRED - ECB/OECD sourced)
+  # EUROZONE (via ECB + IMF)
   # ============================================
-  - id: eu.deposit_rate
-    name: "ECB Deposit Rate"
-    source: fred
-    series_id: ECBDFR
-    frequency: daily
-    unit: "%"
-    decimals: 2
-
   - id: eu.hicp_yoy
     name: "Eurozone HICP YoY"
     source: ecb
@@ -81,36 +67,61 @@ metrics:
     unit: "%"
     decimals: 1
 
+  - id: eu.gdp_growth
+    name: "Eurozone GDP Growth"
+    source: imf
+    indicator: NGDP_RPCH
+    country: EUQ
+    frequency: annual
+    unit: "%"
+    decimals: 1
+
   - id: eu.unemployment
-    name: "Eurozone Unemployment"
-    source: fred
-    series_id: LRHUTTTTEZM156S
-    frequency: monthly
+    name: "Germany Unemployment"
+    source: imf
+    indicator: LUR
+    country: DEU
+    frequency: annual
     unit: "%"
     decimals: 1
 
   # ============================================
-  # GLOBAL (via FRED mirrors)
+  # GLOBAL MARKETS (via Yahoo Finance - no auth required)
   # ============================================
   - id: global.brent
     name: "Brent Crude"
-    source: fred
-    series_id: DCOILBRENTEU
+    source: yahoo
+    series_id: "BZ=F"
     frequency: daily
     unit: "$/bbl"
     decimals: 2
 
   - id: global.dxy
-    name: "USD Trade Weighted"
-    source: fred
-    # DTWEXAFEGS = Trade Weighted USD vs Advanced Foreign Economies (closer to DXY)
-    series_id: DTWEXAFEGS
+    name: "US Dollar Index"
+    source: yahoo
+    series_id: "DX-Y.NYB"
     frequency: daily
     unit: "index"
-    decimals: 1
+    decimals: 2
+
+  - id: global.gold
+    name: "Gold"
+    source: yahoo
+    series_id: "GC=F"
+    frequency: daily
+    unit: "$/oz"
+    decimals: 2
+
+  - id: global.sp500
+    name: "S&P 500"
+    source: yahoo
+    series_id: "^GSPC"
+    frequency: daily
+    unit: "index"
+    decimals: 0
 
   # ============================================
-  # WORLD (via World Bank)
+  # WORLD (via World Bank - no auth required)
   # ============================================
   - id: world.gdp_growth
     name: "World GDP Growth"
@@ -122,63 +133,38 @@ metrics:
     decimals: 1
 
   # ============================================
-  # CHINA (via FRED/OECD - authoritative international source)
+  # CHINA (via IMF DataMapper - no auth required)
   # ============================================
   - id: china.gdp_growth
     name: "China GDP Growth"
-    source: fred
-    # OECD Main Economic Indicators - China GDP growth rate YoY
-    series_id: CHNGDPRAPSMEI
-    frequency: annual
-    unit: "%"
-    decimals: 1
-
-  - id: china.cpi_yoy
-    name: "China CPI YoY"
-    source: fred
-    # OECD monthly CPI growth rate - more timely than World Bank annual
-    series_id: CPALTT01CNM657N
-    frequency: monthly
-    unit: "%"
-    decimals: 1
-
-  # ============================================
-  # CHINA (via IMF DataMapper - alternative authoritative source)
-  # ============================================
-  - id: china.gdp_growth_imf
-    name: "China GDP Growth (IMF)"
     source: imf
-    # IMF World Economic Outlook - Real GDP growth (annual percent change)
     indicator: NGDP_RPCH
     country: CHN
     frequency: annual
     unit: "%"
     decimals: 1
 
-  - id: china.cpi_yoy_imf
-    name: "China CPI YoY (IMF)"
+  - id: china.cpi_yoy
+    name: "China CPI YoY"
     source: imf
-    # IMF - Inflation, average consumer prices (annual percent change)
     indicator: PCPIPCH
     country: CHN
     frequency: annual
     unit: "%"
     decimals: 1
 
-  - id: china.unemployment_imf
-    name: "China Unemployment (IMF)"
+  - id: china.unemployment
+    name: "China Unemployment"
     source: imf
-    # IMF - Unemployment rate (percent of total labor force)
     indicator: LUR
     country: CHN
     frequency: annual
     unit: "%"
     decimals: 1
 
-  - id: china.current_account_imf
-    name: "China Current Account % GDP (IMF)"
+  - id: china.current_account
+    name: "China Current Account"
     source: imf
-    # IMF - Current account balance (percent of GDP)
     indicator: BCA_NGDPD
     country: CHN
     frequency: annual
@@ -186,13 +172,12 @@ metrics:
     decimals: 1
 
   # ============================================
-  # JAPAN (via e-Stat Dashboard + FRED)
+  # JAPAN (via e-Stat Dashboard - NO AUTH REQUIRED)
   # ============================================
-  # e-Stat Dashboard: Official Japanese government statistics (NO AUTH REQUIRED)
   - id: japan.gdp_qoq
     name: "Japan GDP QoQ"
     source: estat_dashboard
-    indicator_code: "0705020401000060000"  # Real GDP, annualized QoQ%, 2015 base, seasonally adjusted
+    indicator_code: "0705020401000060000"
     frequency: quarterly
     unit: "%"
     decimals: 1
@@ -200,52 +185,43 @@ metrics:
   - id: japan.unemployment
     name: "Japan Unemployment"
     source: estat_dashboard
-    indicator_code: "0301010000020020010"  # Complete unemployment rate (both sexes)
+    indicator_code: "0301010000020020010"
     frequency: monthly
     unit: "%"
     decimals: 1
 
   - id: japan.industrial_production
-    name: "Japan Industrial Production"
+    name: "Japan Industrial Prod"
     source: estat_dashboard
-    indicator_code: "0502070301000090010"  # Mining & manufacturing production index, 2020 base
+    indicator_code: "0502070301000090010"
     frequency: monthly
     unit: "index"
     decimals: 1
 
-  # FRED-sourced Japan data (for comparison/redundancy)
-  - id: japan.policy_rate
-    name: "BoJ Policy Rate"
-    source: fred
-    series_id: IRSTCB01JPM156N
-    frequency: monthly
-    unit: "%"
-    decimals: 2
-
   - id: japan.cpi_yoy
     name: "Japan CPI YoY"
-    source: fred
-    series_id: JPNCPIALLMINMEI
-    frequency: monthly
+    source: imf
+    indicator: PCPIPCH
+    country: JPN
+    frequency: annual
     unit: "%"
     decimals: 1
-    transform: yoy_percent
 
   # ============================================
-  # CRYPTO (via FRED - Coinbase data)
+  # CRYPTO (via CoinGecko - no auth required)
   # ============================================
   - id: crypto.bitcoin
     name: "Bitcoin"
-    source: fred
-    series_id: CBBTCUSD
+    source: coingecko
+    series_id: bitcoin
     frequency: daily
     unit: "$"
     decimals: 0
 
   - id: crypto.ethereum
     name: "Ethereum"
-    source: fred
-    series_id: CBETHUSD
+    source: coingecko
+    series_id: ethereum
     frequency: daily
     unit: "$"
     decimals: 0
@@ -253,16 +229,16 @@ metrics:
 # Display groupings for dashboard layout
 groups:
   - name: "US Economy"
-    metrics: [us.fed_funds, us.cpi_yoy, us.core_cpi_yoy, us.unemployment, us.gdp_qoq, us.yield_curve]
+    metrics: [us.gdp_growth, us.cpi_yoy, us.unemployment, us.current_account, us.gov_debt]
 
   - name: "Eurozone"
-    metrics: [eu.deposit_rate, eu.hicp_yoy, eu.unemployment]
+    metrics: [eu.hicp_yoy, eu.gdp_growth, eu.unemployment]
 
   - name: "Asia Pacific"
-    metrics: [china.gdp_growth, china.cpi_yoy, china.gdp_growth_imf, china.cpi_yoy_imf, china.unemployment_imf, china.current_account_imf, japan.gdp_qoq, japan.unemployment, japan.industrial_production, japan.policy_rate, japan.cpi_yoy]
+    metrics: [china.gdp_growth, china.cpi_yoy, china.unemployment, china.current_account, japan.gdp_qoq, japan.unemployment, japan.industrial_production, japan.cpi_yoy]
 
   - name: "Global Markets"
-    metrics: [global.brent, global.dxy]
+    metrics: [global.brent, global.dxy, global.gold, global.sp500]
 
   - name: "Crypto"
     metrics: [crypto.bitcoin, crypto.ethereum]

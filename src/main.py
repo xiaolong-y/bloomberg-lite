@@ -25,6 +25,9 @@ from .connectors import (
     WorldBankConnector,
     IMFConnector,
     EStatDashboardConnector,
+    CoinGeckoConnector,
+    YahooFinanceConnector,
+    OECDConnector,
     HNFirebaseConnector,
     HNAlgoliaConnector,
     ConnectorConfig,
@@ -97,6 +100,12 @@ def fetch_metrics(metrics_config: dict) -> None:
                     connectors[source] = IMFConnector()
                 elif source == "estat_dashboard":
                     connectors[source] = EStatDashboardConnector()
+                elif source == "coingecko":
+                    connectors[source] = CoinGeckoConnector()
+                elif source == "yahoo":
+                    connectors[source] = YahooFinanceConnector()
+                elif source == "oecd":
+                    connectors[source] = OECDConnector()
                 else:
                     return None
             except ValueError as e:
