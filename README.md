@@ -3,7 +3,7 @@
 > **Personal Macro & Tech Intelligence Dashboard**
 > Zero-cost, self-hosted aggregator combining macroeconomic data from official sources with curated Hacker News content into a single, dense, auto-updating dashboard.
 
-[![Update Dashboard](https://github.com/peteryang/bloomberg-lite/actions/workflows/update.yaml/badge.svg)](https://github.com/peteryang/bloomberg-lite/actions/workflows/update.yaml)
+[![Update Dashboard](https://github.com/xiaolong-y/bloomberg-lite/actions/workflows/update.yaml/badge.svg)](https://github.com/xiaolong-y/bloomberg-lite/actions/workflows/update.yaml)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -37,7 +37,7 @@ Bloomberg-Lite is a **radical simplicity** approach to information aggregation. 
 - **Radical cost efficiency**: 100% free (GitHub Actions + Pages)
 - **Dense information display**: Bloomberg Terminal-inspired minimal aesthetic
 
-**Live Dashboard:** [View Here](https://peteryang.github.io/bloomberg-lite/) *(update with your actual GitHub Pages URL)*
+**Live Dashboard:** [View Here](https://xiaolong-y.github.io/bloomberg-lite/)
 
 ---
 
@@ -46,7 +46,9 @@ Bloomberg-Lite is a **radical simplicity** approach to information aggregation. 
 ### Macro Intelligence
 - **US Economy**: Fed Funds Rate, CPI (YoY), Core CPI, Unemployment, GDP Growth, Yield Curve (10Y-2Y)
 - **Eurozone**: ECB Deposit Rate, HICP Inflation, Unemployment
+- **Asia Pacific**: China GDP Growth, China CPI, BoJ Policy Rate, Japan CPI
 - **Global Markets**: Brent Crude Oil, Gold, USD Trade-Weighted Index
+- **Crypto**: Bitcoin (BTC/USD), Ethereum (ETH/USD) via FRED/Coinbase
 - **World**: Global GDP Growth (World Bank)
 
 ### Tech Intelligence
@@ -197,20 +199,53 @@ main.py (Orchestrator)
 
 **What we fetch:**
 - **World GDP Growth** (NY.GDP.MKTP.KD.ZG) for aggregate world economy (WLD)
+- **China GDP Growth** (NY.GDP.MKTP.KD.ZG, country=CHN) - Real GDP growth rate
+- **China CPI YoY** (FP.CPI.TOTL.ZG, country=CHN) - Consumer price inflation
 
-**Why it matters:** The World Bank provides cross-country comparable data on development indicators. We use it for global aggregate metrics not available from regional sources.
+**Why it matters:** The World Bank provides cross-country comparable data on development indicators. We use it for global aggregate metrics and country-specific data (especially for China, where official statistics may be less accessible through other APIs).
 
-**Technical note:** World Bank data is primarily annual. The API returns `[metadata, data_array]` format; our connector extracts the data array and handles null values gracefully.
+**Technical note:** World Bank data is primarily annual. The API returns `[metadata, data_array]` format; our connector extracts the data array and handles null values gracefully. For China specifically, World Bank data provides internationally standardized metrics useful for cross-country comparisons.
 
 ---
 
-### 4. Hacker News APIs
+### 5. FRED - Japan Metrics
+**Provider:** Federal Reserve Bank of St. Louis (OECD sourced)
+**Series Origin:** Organisation for Economic Co-operation and Development (OECD)
+
+**What we fetch:**
+- **BoJ Policy Rate** (IRSTCB01JPM156N) - Bank of Japan immediate rate (central bank policy rate)
+- **Japan CPI YoY** (JPNCPIALLMINMEI) - All Items CPI Index, transformed to YoY %
+
+**Why it matters:** Japan's monetary policy is uniquely important—the BoJ pioneered zero/negative interest rates and yield curve control. Tracking Japan helps understand unconventional monetary policy experiments that other central banks may adopt. Japan also represents the world's 4th largest economy.
+
+**Technical note:** FRED mirrors OECD data with consistent formatting. The BoJ rate series captures Japan's policy stance, while CPI requires our `yoy_percent` transform to convert the index to year-over-year growth rate.
+
+---
+
+### 6. FRED - Cryptocurrency Prices
+**Provider:** Federal Reserve Bank of St. Louis (Coinbase sourced)
+**Data Origin:** Coinbase exchange prices
+
+**What we fetch:**
+- **Bitcoin** (CBBTCUSD) - BTC/USD daily closing price from Coinbase
+- **Ethereum** (CBETHUSD) - ETH/USD daily closing price from Coinbase
+
+**Why it matters:** Bitcoin and Ethereum are the two dominant cryptocurrencies by market cap, representing ~60% of total crypto market. Including them provides exposure to:
+- **Risk sentiment**: Crypto often leads risk-on/risk-off moves
+- **Monetary policy impact**: Crypto responds to Fed policy expectations
+- **Tech-finance intersection**: Core interest for tech-focused users
+
+**Technical note:** FRED sources these from Coinbase (largest US exchange). Daily frequency with typically 1-day lag. Prices in USD.
+
+---
+
+### 7. Hacker News APIs
 **Provider:** Y Combinator (YC)
 **APIs:** Official Firebase API + Algolia Search
 **Authentication:** None required
 **Rate Limits:** Unofficial (be polite)
 
-#### 4a. Firebase API (Official)
+#### 7a. Firebase API (Official)
 **Base URL:** `https://hacker-news.firebaseio.com/v0/`
 **Documentation:** https://github.com/HackerNews/API
 
@@ -223,7 +258,7 @@ main.py (Orchestrator)
 2. Parallel fetch individual items (ThreadPoolExecutor with 10 workers)
 3. Filter to `type: "story"` (excludes jobs, polls)
 
-#### 4b. Algolia Search API
+#### 7b. Algolia Search API
 **Base URL:** `https://hn.algolia.com/api/v1/`
 **Documentation:** https://hn.algolia.com/api
 
@@ -275,6 +310,22 @@ main.py (Orchestrator)
 |--------|-----------|-----------|------|----------------|
 | **World GDP Growth** | NY.GDP.MKTP.KD.ZG | Annual | % | Global economic growth aggregate (World Bank methodology). Context for regional trends. |
 
+### Asia Pacific
+
+| Metric | Series ID / Indicator | Source | Frequency | Unit | Transform | Why It Matters |
+|--------|----------------------|--------|-----------|------|-----------|----------------|
+| **China GDP Growth** | NY.GDP.MKTP.KD.ZG (CHN) | World Bank | Annual | % | None | World's 2nd largest economy. Key driver of global growth and commodity demand. |
+| **China CPI YoY** | FP.CPI.TOTL.ZG (CHN) | World Bank | Annual | % | None | Inflation in world's largest population. Deflation risk indicator. |
+| **BoJ Policy Rate** | IRSTCB01JPM156N | FRED (OECD) | Monthly | % | None | Japan pioneered ZIRP/NIRP. Key for understanding unconventional monetary policy. |
+| **Japan CPI YoY** | JPNCPIALLMINMEI | FRED (OECD) | Monthly | % | yoy_percent | Japan's battle with deflation. BoJ targets 2% inflation sustainably. |
+
+### Crypto
+
+| Metric | Series ID | Source | Frequency | Unit | Why It Matters |
+|--------|-----------|--------|-----------|------|----------------|
+| **Bitcoin** | CBBTCUSD | FRED (Coinbase) | Daily | $ | Leading crypto by market cap. Risk sentiment indicator. Digital gold narrative. |
+| **Ethereum** | CBETHUSD | FRED (Coinbase) | Daily | $ | #2 crypto, DeFi/smart contract platform. Tech innovation proxy. |
+
 ---
 
 ## Technical Stack
@@ -322,7 +373,7 @@ dependencies = [
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/bloomberg-lite.git
+   git clone https://github.com/xiaolong-y/bloomberg-lite.git
    cd bloomberg-lite
    ```
 
