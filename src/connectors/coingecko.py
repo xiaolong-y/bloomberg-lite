@@ -5,12 +5,13 @@ Handles:
 - Bitcoin (BTC) price and market data
 - Ethereum (ETH) price and market data
 - Other major cryptocurrencies
+- Historical price data for sparklines
 
 API Notes:
 - No authentication required (free tier)
 - Rate limit: 10-30 calls/minute
 - Returns USD prices by default
-- Includes 24h change data
+- market_chart endpoint provides historical data
 """
 from datetime import datetime
 from typing import Any, Optional
@@ -35,27 +36,26 @@ class CoinGeckoConnector(BaseMetricConnector):
 
     def fetch(self, config: ConnectorConfig) -> FetchResult:
         """
-        Fetch cryptocurrency price data from CoinGecko.
+        Fetch cryptocurrency historical price data from CoinGecko.
+
+        Uses market_chart endpoint to get 30 days of daily prices for sparklines.
 
         Args:
             config: Must include metric_id that maps to a CoinGecko coin ID
 
         Returns:
-            FetchResult with price and market data
+            FetchResult with historical price data
         """
         coin_id = self.COIN_MAP.get(config.metric_id)
         if not coin_id:
-            # Try using series_id as coin_id
             coin_id = config.series_id or config.metric_id.split(".")[-1]
 
-        url = f"{self.BASE_URL}/coins/{coin_id}"
+        # Use market_chart for historical data (30 days)
+        url = f"{self.BASE_URL}/coins/{coin_id}/market_chart"
         params = {
-            "localization": "false",
-            "tickers": "false",
-            "market_data": "true",
-            "community_data": "false",
-            "developer_data": "false",
-            "sparkline": "false"
+            "vs_currency": "usd",
+            "days": "30",
+            "interval": "daily"
         }
 
         try:
@@ -79,39 +79,45 @@ class CoinGeckoConnector(BaseMetricConnector):
 
     def normalize(self, config: ConnectorConfig, raw_data: Any) -> list[Observation]:
         """
-        Convert CoinGecko data to observations.
+        Convert CoinGecko market_chart data to observations.
 
-        CoinGecko format:
+        CoinGecko market_chart format:
         {
-            "market_data": {
-                "current_price": {"usd": 42000},
-                "price_change_percentage_24h": -2.5,
-                ...
-            }
+            "prices": [[timestamp_ms, price], [timestamp_ms, price], ...],
+            "market_caps": [...],
+            "total_volumes": [...]
         }
         """
         observations = []
 
         try:
-            market_data = raw_data.get("market_data", {})
-            current_price = market_data.get("current_price", {}).get("usd")
+            prices = raw_data.get("prices", [])
 
-            if current_price is None:
+            if not prices:
                 return []
 
-            obs = Observation(
-                metric_id=config.metric_id,
-                obs_date=datetime.now().strftime("%Y-%m-%d"),
-                value=round(float(current_price) * config.multiplier, config.decimals),
-                unit=config.unit or "$",
-                source=self.SOURCE_NAME,
-                retrieved_at=datetime.now()
-            )
-            observations.append(obs)
+            for timestamp_ms, price in prices:
+                if price is None:
+                    continue
+
+                # Convert millisecond timestamp to date
+                obs_date = datetime.fromtimestamp(timestamp_ms / 1000).strftime("%Y-%m-%d")
+
+                obs = Observation(
+                    metric_id=config.metric_id,
+                    obs_date=obs_date,
+                    value=round(float(price) * config.multiplier, config.decimals),
+                    unit=config.unit or "$",
+                    source=self.SOURCE_NAME,
+                    retrieved_at=datetime.now()
+                )
+                observations.append(obs)
 
         except (KeyError, ValueError, TypeError) as e:
             print(f"CoinGecko parse warning: {e}")
 
+        # Sort by date descending (most recent first)
+        observations.sort(key=lambda x: x.obs_date, reverse=True)
         return observations
 
     def health_check(self) -> bool:

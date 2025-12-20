@@ -1,14 +1,14 @@
 # Metric Configuration Schema
-# Each metric defines: identifier, display name, data source, and optional transforms
 # ALL SOURCES ARE FREE AND REQUIRE NO API KEY
+# Data sources: IMF DataMapper, ECB SDMX, e-Stat Dashboard, World Bank, Yahoo Finance, CoinGecko
 
 defaults:
   cache_hours: 6
-  history_points: 120  # ~10 years monthly data
+  history_points: 120
 
 metrics:
   # ============================================
-  # UNITED STATES (via IMF - no auth required)
+  # UNITED STATES
   # ============================================
   - id: us.gdp_growth
     name: "US GDP Growth"
@@ -19,8 +19,8 @@ metrics:
     unit: "%"
     decimals: 1
 
-  - id: us.cpi_yoy
-    name: "US CPI YoY"
+  - id: us.inflation
+    name: "US Inflation"
     source: imf
     indicator: PCPIPCH
     country: USA
@@ -37,29 +37,38 @@ metrics:
     unit: "%"
     decimals: 1
 
+  - id: us.real_rate
+    name: "US Real Interest Rate"
+    source: worldbank
+    indicator: FR.INR.RINR
+    country: USA
+    frequency: annual
+    unit: "%"
+    decimals: 1
+
+  - id: us.gov_debt
+    name: "US Gov Debt/GDP"
+    source: imf
+    indicator: GGXWDG_NGDP
+    country: USA
+    frequency: annual
+    unit: "%"
+    decimals: 0
+
   - id: us.current_account
     name: "US Current Account"
     source: imf
     indicator: BCA_NGDPD
     country: USA
     frequency: annual
-    unit: "% GDP"
-    decimals: 1
-
-  - id: us.gov_debt
-    name: "US Gov Debt"
-    source: imf
-    indicator: GGXWDG_NGDP
-    country: USA
-    frequency: annual
-    unit: "% GDP"
+    unit: "%"
     decimals: 1
 
   # ============================================
-  # EUROZONE (via ECB + IMF)
+  # EUROZONE
   # ============================================
-  - id: eu.hicp_yoy
-    name: "Eurozone HICP YoY"
+  - id: eu.inflation
+    name: "EU HICP Inflation"
     source: ecb
     dataflow: ICP
     series_key: M.U2.N.000000.4.ANR
@@ -68,7 +77,7 @@ metrics:
     decimals: 1
 
   - id: eu.gdp_growth
-    name: "Eurozone GDP Growth"
+    name: "EU GDP Growth"
     source: imf
     indicator: NGDP_RPCH
     country: EUQ
@@ -85,55 +94,17 @@ metrics:
     unit: "%"
     decimals: 1
 
-  # ============================================
-  # GLOBAL MARKETS (via Yahoo Finance - no auth required)
-  # ============================================
-  - id: global.brent
-    name: "Brent Crude"
-    source: yahoo
-    series_id: "BZ=F"
-    frequency: daily
-    unit: "$/bbl"
-    decimals: 2
-
-  - id: global.dxy
-    name: "US Dollar Index"
-    source: yahoo
-    series_id: "DX-Y.NYB"
-    frequency: daily
-    unit: "index"
-    decimals: 2
-
-  - id: global.gold
-    name: "Gold"
-    source: yahoo
-    series_id: "GC=F"
-    frequency: daily
-    unit: "$/oz"
-    decimals: 2
-
-  - id: global.sp500
-    name: "S&P 500"
-    source: yahoo
-    series_id: "^GSPC"
-    frequency: daily
-    unit: "index"
-    decimals: 0
-
-  # ============================================
-  # WORLD (via World Bank - no auth required)
-  # ============================================
-  - id: world.gdp_growth
-    name: "World GDP Growth"
+  - id: eu.real_rate
+    name: "Germany Real Rate"
     source: worldbank
-    indicator: NY.GDP.MKTP.KD.ZG
-    country: WLD
+    indicator: FR.INR.RINR
+    country: DEU
     frequency: annual
     unit: "%"
     decimals: 1
 
   # ============================================
-  # CHINA (via IMF DataMapper - no auth required)
+  # CHINA
   # ============================================
   - id: china.gdp_growth
     name: "China GDP Growth"
@@ -144,8 +115,8 @@ metrics:
     unit: "%"
     decimals: 1
 
-  - id: china.cpi_yoy
-    name: "China CPI YoY"
+  - id: china.inflation
+    name: "China Inflation"
     source: imf
     indicator: PCPIPCH
     country: CHN
@@ -162,23 +133,41 @@ metrics:
     unit: "%"
     decimals: 1
 
+  - id: china.real_rate
+    name: "China Real Rate"
+    source: worldbank
+    indicator: FR.INR.RINR
+    country: CHN
+    frequency: annual
+    unit: "%"
+    decimals: 1
+
   - id: china.current_account
     name: "China Current Account"
     source: imf
     indicator: BCA_NGDPD
     country: CHN
     frequency: annual
-    unit: "% GDP"
+    unit: "%"
     decimals: 1
 
   # ============================================
-  # JAPAN (via e-Stat Dashboard - NO AUTH REQUIRED)
+  # JAPAN
   # ============================================
   - id: japan.gdp_qoq
     name: "Japan GDP QoQ"
     source: estat_dashboard
     indicator_code: "0705020401000060000"
     frequency: quarterly
+    unit: "%"
+    decimals: 1
+
+  - id: japan.inflation
+    name: "Japan Inflation"
+    source: imf
+    indicator: PCPIPCH
+    country: JPN
+    frequency: annual
     unit: "%"
     decimals: 1
 
@@ -190,7 +179,16 @@ metrics:
     unit: "%"
     decimals: 1
 
-  - id: japan.industrial_production
+  - id: japan.real_rate
+    name: "Japan Real Rate"
+    source: worldbank
+    indicator: FR.INR.RINR
+    country: JPN
+    frequency: annual
+    unit: "%"
+    decimals: 1
+
+  - id: japan.industrial
     name: "Japan Industrial Prod"
     source: estat_dashboard
     indicator_code: "0502070301000090010"
@@ -198,17 +196,64 @@ metrics:
     unit: "index"
     decimals: 1
 
-  - id: japan.cpi_yoy
-    name: "Japan CPI YoY"
+  # ============================================
+  # GLOBAL MARKETS
+  # ============================================
+  - id: global.brent
+    name: "Brent Crude"
+    source: yahoo
+    series_id: "BZ=F"
+    frequency: daily
+    unit: "$/bbl"
+    decimals: 2
+
+  - id: global.gold
+    name: "Gold"
+    source: yahoo
+    series_id: "GC=F"
+    frequency: daily
+    unit: "$/oz"
+    decimals: 0
+
+  - id: global.dxy
+    name: "US Dollar Index"
+    source: yahoo
+    series_id: "DX-Y.NYB"
+    frequency: daily
+    unit: "index"
+    decimals: 1
+
+  - id: global.sp500
+    name: "S&P 500"
+    source: yahoo
+    series_id: "^GSPC"
+    frequency: daily
+    unit: "index"
+    decimals: 0
+
+  # ============================================
+  # WORLD
+  # ============================================
+  - id: world.gdp_growth
+    name: "World GDP Growth"
+    source: worldbank
+    indicator: NY.GDP.MKTP.KD.ZG
+    country: WLD
+    frequency: annual
+    unit: "%"
+    decimals: 1
+
+  - id: world.inflation
+    name: "World Inflation"
     source: imf
     indicator: PCPIPCH
-    country: JPN
+    country: WLD
     frequency: annual
     unit: "%"
     decimals: 1
 
   # ============================================
-  # CRYPTO (via CoinGecko - no auth required)
+  # CRYPTO
   # ============================================
   - id: crypto.bitcoin
     name: "Bitcoin"
@@ -229,16 +274,19 @@ metrics:
 # Display groupings for dashboard layout
 groups:
   - name: "US Economy"
-    metrics: [us.gdp_growth, us.cpi_yoy, us.unemployment, us.current_account, us.gov_debt]
+    metrics: [us.gdp_growth, us.inflation, us.real_rate, us.unemployment, us.gov_debt, us.current_account]
 
   - name: "Eurozone"
-    metrics: [eu.hicp_yoy, eu.gdp_growth, eu.unemployment]
+    metrics: [eu.gdp_growth, eu.inflation, eu.real_rate, eu.unemployment]
 
-  - name: "Asia Pacific"
-    metrics: [china.gdp_growth, china.cpi_yoy, china.unemployment, china.current_account, japan.gdp_qoq, japan.unemployment, japan.industrial_production, japan.cpi_yoy]
+  - name: "China"
+    metrics: [china.gdp_growth, china.inflation, china.real_rate, china.unemployment, china.current_account]
+
+  - name: "Japan"
+    metrics: [japan.gdp_qoq, japan.inflation, japan.real_rate, japan.unemployment, japan.industrial]
 
   - name: "Global Markets"
-    metrics: [global.brent, global.dxy, global.gold, global.sp500]
+    metrics: [global.sp500, global.brent, global.gold, global.dxy]
 
   - name: "Crypto"
     metrics: [crypto.bitcoin, crypto.ethereum]
