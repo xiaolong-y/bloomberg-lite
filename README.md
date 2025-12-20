@@ -1,9 +1,9 @@
-# Bloomberg-Lite
+# Meridian
 
 > **Personal Macro & Tech Intelligence Dashboard**
 > Zero-cost, self-hosted aggregator combining macroeconomic data from official sources with curated Hacker News content into a single, dense, auto-updating dashboard.
 
-[![Update Dashboard](https://github.com/xiaolong-y/bloomberg-lite/actions/workflows/update.yaml/badge.svg)](https://github.com/xiaolong-y/bloomberg-lite/actions/workflows/update.yaml)
+[![Update Dashboard](https://github.com/xiaolong-y/meridian/actions/workflows/update-dashboard.yml/badge.svg)](https://github.com/xiaolong-y/meridian/actions/workflows/update-dashboard.yml)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -29,15 +29,15 @@
 
 ## Overview
 
-Bloomberg-Lite is a **radical simplicity** approach to information aggregation. It pulls critical macroeconomic indicators and technology news into a single, self-updating dashboard—with zero infrastructure costs.
+Meridian is a **radical simplicity** approach to information aggregation. It pulls critical macroeconomic indicators and technology news into a single, self-updating dashboard—with zero infrastructure costs.
 
 **Design Philosophy:**
 - **Fewer sources, better curation**: Only official data providers (no scraping)
 - **Zero maintenance burden**: Fully automated via GitHub Actions
 - **Radical cost efficiency**: 100% free (GitHub Actions + Pages)
-- **Dense information display**: Bloomberg Terminal-inspired minimal aesthetic
+- **Dense information display**: Minimal, Flexoki-themed aesthetic
 
-**Live Dashboard:** [View Here](https://xiaolong-y.github.io/bloomberg-lite/)
+**Live Dashboard:** [View Here](https://xiaolong-y.github.io/meridian/)
 
 ---
 
@@ -390,8 +390,8 @@ dependencies = [
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/xiaolong-y/bloomberg-lite.git
-   cd bloomberg-lite
+   git clone https://github.com/xiaolong-y/meridian.git
+   cd meridian
    ```
 
 2. **Create virtual environment**
@@ -563,7 +563,7 @@ jobs:
 ### Project Structure
 
 ```
-bloomberg-lite/
+meridian/
 ├── README.md                    # This file
 ├── .env.example                 # Environment variables template
 ├── .gitignore                   # Git ignore rules
@@ -605,7 +605,7 @@ bloomberg-lite/
 │   └── static/                  # CSS/JS (if needed)
 │
 ├── data/
-│   └── bloomberg_lite.db        # SQLite database (gitignored)
+│   └── meridian.db              # SQLite database (gitignored)
 │
 ├── docs/
 │   └── index.html               # Generated dashboard (GitHub Pages)

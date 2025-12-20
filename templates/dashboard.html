@@ -3,561 +3,436 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Personal macro & tech intelligence dashboard">
-  <title>{{ title }} | {{ generated_at }}</title>
+  <meta name="description" content="Meridian: Personal macro & tech intelligence dashboard">
+  <title>{{ title }}</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;400;500&display=swap');
 
-    *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg: #0a0a0a;
-      --panel: #111111;
-      --panel-hover: #161616;
-      --border: #222222;
-      --text: #e0e0e0;
-      --text-dim: #888888;
-      --muted: #666666;
-      --up: #22c55e;
-      --down: #ef4444;
-      --accent: #3b82f6;
-      --accent-dim: #1d4ed8;
-      --yellow: #eab308;
+      /* Flexoki Light Theme */
+      --bg: #FFFCF0;
+      --card: #F2F0E5;
+      --text: #2D2B28;
+      --dim: #6F6E69;
+      --muted: #DAD8CE;
+      --up: #66800B;
+      --down: #AF3029;
+      --accent: #205EA6;
+      --spark: #5E409D;
+      --score: #AD8301;
+      --link: #24837B;
+      --particle: #24837B;
     }
 
-    html {
-      font-size: 11px;
-    }
+    html { font-size: 10px; }
 
     body {
-      font-family: 'IBM Plex Mono', ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+      font-family: 'IBM Plex Mono', monospace;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.4;
-      padding: 8px;
+      line-height: 1.35;
+      padding: 4px;
       min-height: 100vh;
+      font-weight: 400;
     }
 
-    /* Header - Compact */
+    /* Header */
     header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      padding: 4px 4px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 6px;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    h1 {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--accent);
-      letter-spacing: -0.5px;
-    }
-
-    .badge {
-      font-size: 9px;
-      padding: 2px 6px;
-      background: var(--accent-dim);
-      color: var(--text);
-      border-radius: 2px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .timestamp {
-      color: var(--muted);
-      font-size: 10px;
-    }
-
-    /* Grid Layout - Dense 4-column on desktop */
-    .dashboard {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
-    }
-
-    @media (max-width: 1400px) {
-      .dashboard {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    @media (max-width: 1000px) {
-      .dashboard {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    /* Panel Styles - More compact */
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 2px;
-      padding: 6px 8px;
-    }
-
-    .panel:hover {
-      background: var(--panel-hover);
-    }
-
-    .panel-title {
-      font-size: 9px;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: var(--accent);
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 4px;
-      margin-bottom: 6px;
-    }
-
-    /* Metric Grid - 2 columns within panel for density */
-    .metric-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0;
-    }
-
-    .metric-grid.single-col {
-      grid-template-columns: 1fr;
-    }
-
-    /* Metric Styles - Compact horizontal layout */
-    .metric {
-      display: flex;
       align-items: baseline;
-      justify-content: space-between;
-      gap: 4px;
-      padding: 3px 4px;
-      border-bottom: 1px solid var(--border);
-      font-size: 10px;
+      padding: 2px 4px 4px;
+      margin-bottom: 4px;
+      border-bottom: 1px solid var(--muted);
     }
 
-    .metric:nth-child(odd) {
-      border-right: 1px solid var(--border);
+    .title {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .timestamp { color: var(--dim); font-size: 9px; }
+
+    /* Main 3-Column Layout: Stats | Tech | AI+Startups */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr 1fr;
+      gap: 3px;
+      align-items: start;
     }
 
-    .metric:nth-last-child(1),
-    .metric:nth-last-child(2) {
-      border-bottom: none;
+    @media (max-width: 1200px) {
+      .main-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .col-right {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3px;
+      }
     }
 
-    .metric-grid.single-col .metric {
-      border-right: none;
+    @media (max-width: 800px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+      .col-right {
+        grid-template-columns: 1fr;
+      }
     }
 
-    .metric-grid.single-col .metric:last-child {
-      border-bottom: none;
-    }
-
-    .metric-info {
-      flex: 1;
-      min-width: 0;
+    /* Stats Column - stacked cards */
+    .col-stats {
       display: flex;
       flex-direction: column;
-      gap: 1px;
+      gap: 3px;
     }
 
-    .metric-name {
-      color: var(--text-dim);
+    /* Card Base */
+    .card {
+      background: var(--card);
       font-size: 9px;
+      border: 1px solid var(--muted);
+      border-radius: 2px;
+    }
+
+    .card-head {
+      background: var(--bg);
+      padding: 2px 4px;
+      font-size: 8px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--muted);
+      font-weight: 500;
+    }
+
+    .card-head::before {
+      content: '>';
+      color: var(--muted);
+      margin-right: 4px;
+    }
+
+    /* Metric Row */
+    .m-row {
+      display: flex;
+      align-items: baseline;
+      padding: 2px 4px;
+      border-bottom: 1px dotted var(--muted);
+      gap: 4px;
+    }
+
+    .m-row:last-child { border-bottom: none; }
+    .m-row:hover { background: rgba(45, 43, 40, 0.03); }
+
+    .m-name {
+      color: var(--dim);
+      font-size: 8px;
+      flex: 1;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
+      min-width: 0;
     }
 
-    .sparkline {
+    .m-spark {
+      color: var(--spark);
+      font-size: 9px;
+      letter-spacing: -0.5px;
+      flex-shrink: 0;
+    }
+
+    .m-val {
+      font-weight: 500;
+      font-size: 10px;
+      flex-shrink: 0;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .m-chg {
       font-size: 8px;
-      color: var(--accent);
-      letter-spacing: -1.5px;
-      font-family: 'IBM Plex Mono', monospace;
-      line-height: 1;
-      display: flex;
-      align-items: center;
-      gap: 2px;
+      flex-shrink: 0;
+      min-width: 36px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
     }
 
-    .metric-data {
+    .m-chg.up { color: var(--up); }
+    .m-chg.down { color: var(--down); }
+
+    /* News Row */
+    .n-row {
+      display: flex;
+      align-items: baseline;
+      padding: 2px 4px;
+      border-bottom: 1px dotted var(--muted);
+      gap: 6px;
+      line-height: 1.4;
+    }
+
+    .n-row:last-child { border-bottom: none; }
+    .n-row:hover { background: rgba(45, 43, 40, 0.03); }
+
+    .n-score {
+      color: var(--score);
+      font-size: 8px;
+      font-weight: 500;
+      min-width: 28px;
+      text-align: right;
+      flex-shrink: 0;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .n-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .n-title {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 9px;
+    }
+
+    .n-title:hover { color: var(--accent); }
+
+    .n-domain {
+      color: var(--dim);
+      font-size: 7px;
+    }
+
+    .n-meta {
       display: flex;
       align-items: baseline;
       gap: 4px;
       flex-shrink: 0;
+      font-size: 7px;
+      color: var(--dim);
     }
 
-    .metric-value {
-      font-weight: 500;
-      font-size: 11px;
-      text-align: right;
-      white-space: nowrap;
-      font-variant-numeric: tabular-nums;
-    }
+    .n-time { color: var(--dim); }
 
-    .metric-change {
-      font-size: 9px;
-      text-align: right;
-      white-space: nowrap;
-      font-variant-numeric: tabular-nums;
-      min-width: 42px;
-    }
-
-    .metric-change.up {
-      color: var(--up);
-    }
-
-    .metric-change.down {
-      color: var(--down);
-    }
-
-    .metric-change.up::before {
-      content: '\25B2';
-      font-size: 6px;
-      margin-right: 1px;
-    }
-
-    .metric-change.down::before {
-      content: '\25BC';
-      font-size: 6px;
-      margin-right: 1px;
-    }
-
-    /* Stories Panel - Spans 2 columns on 4-col, full on mobile */
-    .stories-panel {
-      grid-column: span 2;
-    }
-
-    @media (max-width: 1000px) {
-      .stories-panel {
-        grid-column: 1 / -1;
-      }
-    }
-
-    .story {
-      display: grid;
-      grid-template-columns: 38px 1fr;
-      gap: 6px;
-      padding: 4px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .story:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-
-    .story-score {
-      display: flex;
-      align-items: flex-start;
-      justify-content: flex-end;
-      gap: 2px;
-      color: var(--yellow);
-      font-weight: 500;
-      font-size: 10px;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .heat-indicator {
-      margin-right: 2px;
-    }
-
-    .story-score .heat-indicator + ::before {
-      display: none;
-    }
-
-    .story-content {
-      min-width: 0;
-    }
-
-    .story-title {
-      margin-bottom: 2px;
-      line-height: 1.3;
-      font-size: 10px;
-    }
-
-    .story-title a {
-      color: var(--text);
+    .n-hn {
+      color: var(--link);
       text-decoration: none;
-      word-wrap: break-word;
+      padding: 0 2px;
     }
 
-    .story-title a:hover {
+    .n-hn:hover {
       color: var(--accent);
+      text-decoration: underline;
     }
 
-    .domain {
-      color: var(--muted);
-      font-size: 8px;
-      font-weight: 400;
-    }
-
-    .story-meta {
-      color: var(--muted);
-      font-size: 8px;
+    /* Right Column - stacked AI/ML and Startups */
+    .col-right {
       display: flex;
-      align-items: center;
-      gap: 4px;
+      flex-direction: column;
+      gap: 3px;
     }
 
-    .time-indicator {
-      display: inline-flex;
-      align-items: center;
-      gap: 1px;
-    }
-
-    .meta-sep {
-      color: var(--muted);
-      opacity: 0.5;
-    }
-
-    /* Sidebar Feeds - Dense grid */
-    .sidebar-feeds {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
-      grid-column: 1 / -1;
-    }
-
-    @media (max-width: 1400px) {
-      .sidebar-feeds {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    @media (max-width: 1000px) {
-      .sidebar-feeds {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    .sidebar-story {
-      display: flex;
-      gap: 4px;
-      padding: 3px 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 9px;
-    }
-
-    .sidebar-story:last-child {
-      border-bottom: none;
-    }
-
-    .sidebar-score {
-      color: var(--yellow);
-      font-weight: 500;
-      min-width: 32px;
-      text-align: right;
-      font-variant-numeric: tabular-nums;
-      font-size: 9px;
-    }
-
-    .sidebar-title {
-      line-height: 1.25;
-    }
-
-    .sidebar-title a {
-      color: var(--text-dim);
-      text-decoration: none;
-    }
-
-    .sidebar-title a:hover {
-      color: var(--accent);
-    }
-
-    /* Footer - Minimal */
+    /* Footer with ASCII Art */
     footer {
       margin-top: 8px;
-      padding-top: 6px;
-      border-top: 1px solid var(--border);
+      padding: 6px 4px;
+      border-top: 1px solid var(--muted);
       text-align: center;
-      color: var(--muted);
-      font-size: 8px;
+      color: var(--dim);
+      font-size: 7px;
     }
 
     footer a {
-      color: var(--accent);
+      color: var(--link);
       text-decoration: none;
     }
 
     footer a:hover {
+      color: var(--accent);
       text-decoration: underline;
     }
 
-    /* Responsive - Mobile */
-    @media (max-width: 600px) {
-      html {
-        font-size: 10px;
-      }
-
-      body {
-        padding: 4px;
-      }
-
-      .dashboard {
-        grid-template-columns: 1fr;
-        gap: 4px;
-      }
-
-      .stories-panel,
-      .sidebar-feeds {
-        grid-column: 1;
-      }
-
-      .sidebar-feeds {
-        grid-template-columns: 1fr;
-      }
-
-      .metric-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .metric:nth-child(odd) {
-        border-right: none;
-      }
-
-      .story {
-        grid-template-columns: 32px 1fr;
-      }
-
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 4px;
-        padding: 4px 2px;
-        margin-bottom: 8px;
-      }
+    .footer-links {
+      margin-bottom: 6px;
     }
 
-    /* Empty State - Compact */
-    .empty-state {
-      color: var(--muted);
-      font-style: italic;
-      padding: 8px 4px;
+    .footer-links a {
+      margin: 0 4px;
+    }
+
+    /* Particle ASCII Art */
+    .ascii-footer {
+      margin: 8px auto 4px;
+      font-size: 8px;
+      line-height: 1.1;
+      color: var(--dim);
+      opacity: 0.5;
+      user-select: none;
+      overflow: hidden;
+      max-width: 400px;
+    }
+
+    .ascii-footer .particle {
+      display: inline-block;
+      color: var(--particle);
+      opacity: 0.4;
+    }
+
+    .ascii-footer .meridian-text {
+      color: var(--dim);
+      letter-spacing: 1px;
+    }
+
+    @keyframes particleDrift {
+      0%, 100% { opacity: 0.2; transform: translateY(0); }
+      50% { opacity: 0.6; transform: translateY(-1px); }
+    }
+
+    .ascii-footer .p1 { animation: particleDrift 3s ease-in-out infinite; }
+    .ascii-footer .p2 { animation: particleDrift 3s ease-in-out infinite 0.3s; }
+    .ascii-footer .p3 { animation: particleDrift 3s ease-in-out infinite 0.6s; }
+    .ascii-footer .p4 { animation: particleDrift 3s ease-in-out infinite 0.9s; }
+    .ascii-footer .p5 { animation: particleDrift 3s ease-in-out infinite 1.2s; }
+    .ascii-footer .p6 { animation: particleDrift 3s ease-in-out infinite 1.5s; }
+
+    .empty {
+      color: var(--dim);
+      font-size: 8px;
+      padding: 6px 4px;
       text-align: center;
-      font-size: 9px;
     }
 
-    /* Metrics Panel specific styling */
-    .metrics-panel {
-      min-width: 0;
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .ascii-footer .particle {
+        animation: none;
+        opacity: 0.3;
+      }
     }
   </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">
-    <h1>{{ title }}</h1>
-    <span class="badge">Live</span>
-  </div>
-  <span class="timestamp">Updated: {{ generated_at }}</span>
+  <span class="title">{{ title }}</span>
+  <span class="timestamp">{{ generated_at }}</span>
 </header>
 
-<div class="dashboard">
-  {# Macro Metrics Panels - Dense 2-column layout within each panel #}
-  {% for group in metric_groups %}
-  <section class="panel metrics-panel">
-    <div class="panel-title">{{ group.name|section_icon }} {{ group.name }}</div>
-    {% if group.metrics %}
-      <div class="metric-grid{% if group.metrics|length <= 3 %} single-col{% endif %}">
-      {% for m in group.metrics %}
-      <div class="metric">
-        <div class="metric-info">
-          <div class="metric-name">{{ m.name }}</div>
-          {% if m.sparkline %}
-          <div class="sparkline">{{ m.direction_arrow }}{{ m.sparkline }}</div>
-          {% endif %}
+<div class="main-grid">
+  {# Column 1: All Stats #}
+  <div class="col-stats">
+    {% for group in metric_groups %}
+    <div class="card">
+      <div class="card-head">{{ group.name }}</div>
+      {% if group.metrics %}
+        {% for m in group.metrics %}
+        <div class="m-row">
+          <span class="m-name">{{ m.name }}</span>
+          {% if m.sparkline %}<span class="m-spark">{{ m.sparkline }}</span>{% endif %}
+          <span class="m-val">{{ m.formatted_value }}</span>
+          <span class="m-chg {{ m.change_class }}">{{ m.formatted_change }}</span>
         </div>
-        <div class="metric-data">
-          <div class="metric-value">{{ m.formatted_value }}</div>
-          <div class="metric-change {{ m.change_class }}">{{ m.formatted_change }}</div>
+        {% endfor %}
+      {% else %}
+        <div class="empty">No data</div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+
+  {# Column 2: Tech (20 items) #}
+  {% for feed in feeds %}
+    {% if feed.id == 'hn_tech' %}
+    <div class="card">
+      <div class="card-head">{{ feed.name }}</div>
+      {% if feed.stories %}
+        {% for story in feed.stories %}
+        <div class="n-row">
+          <span class="n-score">{{ story.score }}</span>
+          <div class="n-content">
+            <a class="n-title" href="{{ story.url or 'https://news.ycombinator.com/item?id=' ~ story.id }}" target="_blank" rel="noopener">{{ story.title }}</a>
+            {% if story.domain %}<span class="n-domain"> ({{ story.domain }})</span>{% endif %}
+          </div>
+          <div class="n-meta">
+            <span class="n-time">{{ story.time_ago }}</span>
+            <a class="n-hn" href="https://news.ycombinator.com/item?id={{ story.id }}" target="_blank">{{ story.comments }}c</a>
+          </div>
         </div>
-      </div>
-      {% endfor %}
-      </div>
-    {% else %}
-      <div class="empty-state">No data available</div>
+        {% endfor %}
+      {% else %}
+        <div class="empty">No stories</div>
+      {% endif %}
+    </div>
     {% endif %}
-  </section>
   {% endfor %}
 
-  {# Primary Stories Panel #}
-  <section class="panel stories-panel">
-    <div class="panel-title">💻 Tech Discussion</div>
-    {% set ns = namespace(primary_stories=[]) %}
+  {# Column 3: AI/ML + Startups stacked #}
+  <div class="col-right">
     {% for feed in feeds %}
-      {% if feed.id == primary_feed %}
-        {% set ns.primary_stories = feed.stories %}
-      {% endif %}
-    {% endfor %}
-
-    {% if ns.primary_stories %}
-      {% for story in ns.primary_stories[:15] %}
-      <div class="story">
-        <div class="story-score"><span class="heat-indicator">{{ story.heat_symbol }}</span>{{ story.score }}</div>
-        <div class="story-content">
-          <div class="story-title">
-            <a href="{{ story.url or 'https://news.ycombinator.com/item?id=' ~ story.id }}" target="_blank" rel="noopener">
-              {{ story.title }}{% if story.domain %} <span class="domain">({{ story.domain }})</span>{% endif %}
-            </a>
-          </div>
-          <div class="story-meta">
-            {% if story.time_ago %}<span class="time-indicator">{{ story.time_symbol }}{{ story.time_ago }}</span>{% endif %}
-            <span class="meta-sep">·</span>
-            <span>{{ story.comments }} cmt</span>
-            <span class="meta-sep">·</span>
-            <a href="https://news.ycombinator.com/item?id={{ story.id }}" target="_blank" rel="noopener">hn</a>
-          </div>
-        </div>
-      </div>
-      {% endfor %}
-    {% else %}
-      <div class="empty-state">No stories available</div>
-    {% endif %}
-  </section>
-
-  {# Sidebar Topic Feeds #}
-  {% if sidebar_feeds %}
-  <div class="sidebar-feeds">
-    {% for feed in feeds %}
-      {% if feed.id in sidebar_feeds %}
-      <section class="panel">
-        <div class="panel-title">{{ feed.name|section_icon }} {{ feed.name }}</div>
+      {% if feed.id == 'hn_ai' %}
+      <div class="card">
+        <div class="card-head">{{ feed.name }}</div>
         {% if feed.stories %}
-          {% for story in feed.stories[:8] %}
-          <div class="sidebar-story">
-            <div class="sidebar-score">{{ story.heat_symbol }}{{ story.score }}</div>
-            <div class="sidebar-title">
-              <a href="{{ story.url or 'https://news.ycombinator.com/item?id=' ~ story.id }}" target="_blank" rel="noopener">
-                {{ story.title|truncate(70) }}{% if story.domain %} <span class="domain">({{ story.domain|truncate(15, True, '') }})</span>{% endif %}
-              </a>
+          {% for story in feed.stories %}
+          <div class="n-row">
+            <span class="n-score">{{ story.score }}</span>
+            <div class="n-content">
+              <a class="n-title" href="{{ story.url or 'https://news.ycombinator.com/item?id=' ~ story.id }}" target="_blank" rel="noopener">{{ story.title }}</a>
+              {% if story.domain %}<span class="n-domain"> ({{ story.domain }})</span>{% endif %}
+            </div>
+            <div class="n-meta">
+              <span class="n-time">{{ story.time_ago }}</span>
+              <a class="n-hn" href="https://news.ycombinator.com/item?id={{ story.id }}" target="_blank">{{ story.comments }}c</a>
             </div>
           </div>
           {% endfor %}
         {% else %}
-          <div class="empty-state">No stories</div>
+          <div class="empty">No stories</div>
         {% endif %}
-      </section>
+      </div>
+      {% endif %}
+    {% endfor %}
+
+    {% for feed in feeds %}
+      {% if feed.id == 'hn_startups' %}
+      <div class="card">
+        <div class="card-head">{{ feed.name }}</div>
+        {% if feed.stories %}
+          {% for story in feed.stories %}
+          <div class="n-row">
+            <span class="n-score">{{ story.score }}</span>
+            <div class="n-content">
+              <a class="n-title" href="{{ story.url or 'https://news.ycombinator.com/item?id=' ~ story.id }}" target="_blank" rel="noopener">{{ story.title }}</a>
+              {% if story.domain %}<span class="n-domain"> ({{ story.domain }})</span>{% endif %}
+            </div>
+            <div class="n-meta">
+              <span class="n-time">{{ story.time_ago }}</span>
+              <a class="n-hn" href="https://news.ycombinator.com/item?id={{ story.id }}" target="_blank">{{ story.comments }}c</a>
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="empty">No stories</div>
+        {% endif %}
+      </div>
       {% endif %}
     {% endfor %}
   </div>
-  {% endif %}
 </div>
 
 <footer>
-  <p>📊 Data: FRED · OECD · World Bank · ECB · HN |
-     <a href="https://github.com/xiaolong-y/bloomberg-lite">GitHub</a></p>
+  <div class="footer-links">
+    Data: IMF · ECB · World Bank · Yahoo · CoinGecko · HN |
+    <a href="CODEBOOK.html">codebook</a> |
+    <a href="https://github.com/xiaolong-y/meridian">src</a>
+  </div>
+  <div class="ascii-footer">
+    <span class="particle p1">·</span> <span class="particle p2">˚</span> <span class="particle p3">·</span> <span class="particle p4">˚</span> <span class="particle p5">·</span> <span class="particle p6">˚</span><br>
+    <span class="meridian-text">M E R I D I A N</span><br>
+    <span class="particle p6">˚</span> <span class="particle p5">·</span> <span class="particle p4">˚</span> <span class="particle p3">·</span> <span class="particle p2">˚</span> <span class="particle p1">·</span>
+  </div>
 </footer>
 
 </body>

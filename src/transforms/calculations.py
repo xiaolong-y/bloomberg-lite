@@ -146,7 +146,7 @@ def prepare_sparkline_data(
 
 def generate_ascii_sparkline(values: list[float], width: int = 10) -> str:
     """
-    Generate ASCII sparkline from values.
+    Generate ASCII sparkline from values using block characters.
 
     Uses Unicode block characters: ▁▂▃▄▅▆▇█
 
@@ -162,14 +162,12 @@ def generate_ascii_sparkline(values: list[float], width: int = 10) -> str:
 
     blocks = " ▁▂▃▄▅▆▇█"
 
-    # Normalize values to 0-8 range
     min_val = min(values)
     max_val = max(values)
 
     if max_val == min_val:
         return blocks[4] * min(len(values), width)
 
-    # Sample if too many values
     if len(values) > width:
         step = len(values) / width
         values = [values[int(i * step)] for i in range(width)]
@@ -179,5 +177,70 @@ def generate_ascii_sparkline(values: list[float], width: int = 10) -> str:
         normalized = (v - min_val) / (max_val - min_val)
         idx = int(normalized * 8)
         sparkline += blocks[idx]
+
+    return sparkline
+
+
+def generate_braille_sparkline(values: list[float], width: int = 8) -> str:
+    """
+    Generate high-resolution sparkline using braille patterns.
+
+    Each braille character encodes TWO data points (left and right columns),
+    giving 2x the resolution of block characters. Each column has 5 height
+    levels (0-4 dots).
+
+    Braille dot positions:
+        1 4
+        2 5
+        3 6
+        7 8
+
+    Args:
+        values: List of numeric values
+        width: Target character width (actual data points = width * 2)
+
+    Returns:
+        String of braille characters representing the trend
+    """
+    if not values:
+        return ""
+
+    # Braille encoding: each column can show 5 heights (0-4 dots from bottom)
+    # Left column (dots 7,3,2,1 from bottom to top): values 64, 4, 2, 1
+    # Right column (dots 8,6,5,4 from bottom to top): values 128, 32, 16, 8
+    LEFT_HEIGHTS = [0, 64, 64+4, 64+4+2, 64+4+2+1]  # 0-4 dots
+    RIGHT_HEIGHTS = [0, 128, 128+32, 128+32+16, 128+32+16+8]  # 0-4 dots
+    BRAILLE_BASE = 0x2800
+
+    min_val = min(values)
+    max_val = max(values)
+
+    # Handle flat line
+    if max_val == min_val:
+        mid = LEFT_HEIGHTS[2] + RIGHT_HEIGHTS[2]
+        return chr(BRAILLE_BASE + mid) * width
+
+    # Resample to fit width * 2 data points (2 per braille char)
+    target_points = width * 2
+    if len(values) != target_points:
+        if len(values) > target_points:
+            step = len(values) / target_points
+            values = [values[int(i * step)] for i in range(target_points)]
+        else:
+            # Pad with last value if not enough data
+            values = values + [values[-1]] * (target_points - len(values))
+
+    # Normalize values to 0-4 range
+    def normalize(v):
+        n = (v - min_val) / (max_val - min_val)
+        return int(n * 4)
+
+    # Build braille string, 2 values per character
+    sparkline = ""
+    for i in range(0, len(values), 2):
+        left_height = normalize(values[i])
+        right_height = normalize(values[i + 1]) if i + 1 < len(values) else normalize(values[i])
+        char_code = BRAILLE_BASE + LEFT_HEIGHTS[left_height] + RIGHT_HEIGHTS[right_height]
+        sparkline += chr(char_code)
 
     return sparkline

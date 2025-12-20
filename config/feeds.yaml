@@ -1,66 +1,42 @@
 # Tech Feed Configuration
-# Fetching logic:
-# - Firebase feeds: Real-time top/best stories from HN (sorted by current ranking)
-# - Algolia feeds: Search with min_score filter, sorted by popularity
+# Sources: HN Firebase (real-time) + Algolia (search)
 
 feeds:
   # ============================================
-  # PRIMARY FEEDS (Firebase - real-time rankings)
+  # PRIMARY: Tech (Top HN Stories)
   # ============================================
-  - id: hn_top
-    name: "Top Stories"
+  - id: hn_tech
+    name: "Tech"
     source: hn_firebase
     endpoint: topstories
-    limit: 25
+    limit: 20
 
   # ============================================
-  # TOPIC FEEDS (Algolia - curated by interest)
+  # TOPIC FEEDS (Algolia search)
   # ============================================
 
-  # Core tech interest
+  # AI/ML - Important AI stories from past month
   - id: hn_ai
     name: "AI/ML"
     source: hn_algolia
     query: "AI"
     tags: story
-    time_range: week
+    time_range: month
     min_score: 50
     sort_by: popularity
-    limit: 12
-
-  # Infrastructure & Data
-  - id: hn_infra
-    name: "Infrastructure"
-    source: hn_algolia
-    query: "postgres database rust"
-    tags: story
-    time_range: week
-    min_score: 30
-    sort_by: popularity
     limit: 10
 
-  # Markets & Finance (macro focus)
-  - id: hn_finance
-    name: "Markets & Finance"
+  # Startups - Notable startup news from past month
+  - id: hn_startups
+    name: "Startups"
     source: hn_algolia
-    query: "markets trading fed"
+    query: "startup"
     tags: story
     time_range: month
     min_score: 30
     sort_by: popularity
     limit: 10
-
-  # East Asia focus
-  - id: hn_china
-    name: "China Tech"
-    source: hn_algolia
-    query: "china chinese"
-    tags: story
-    time_range: month
-    min_score: 20
-    sort_by: popularity
-    limit: 8
 
 display:
-  primary_feed: hn_top
-  sidebar_feeds: [hn_ai, hn_infra, hn_finance, hn_china]
+  primary_feed: hn_tech
+  sidebar_feeds: [hn_ai, hn_startups]

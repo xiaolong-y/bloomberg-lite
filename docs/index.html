@@ -3,1309 +3,1082 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Personal macro & tech intelligence dashboard">
-  <title>Bloomberg-Lite | 2025-12-20 16:11 UTC</title>
+  <meta name="description" content="Meridian: Personal macro & tech intelligence dashboard">
+  <title>Meridian</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;400;500&display=swap');
 
-    *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg: #0a0a0a;
-      --panel: #111111;
-      --panel-hover: #161616;
-      --border: #222222;
-      --text: #e0e0e0;
-      --text-dim: #888888;
-      --muted: #666666;
-      --up: #22c55e;
-      --down: #ef4444;
-      --accent: #3b82f6;
-      --accent-dim: #1d4ed8;
-      --yellow: #eab308;
+      /* Flexoki Light Theme */
+      --bg: #FFFCF0;
+      --card: #F2F0E5;
+      --text: #2D2B28;
+      --dim: #6F6E69;
+      --muted: #DAD8CE;
+      --up: #66800B;
+      --down: #AF3029;
+      --accent: #205EA6;
+      --spark: #5E409D;
+      --score: #AD8301;
+      --link: #24837B;
+      --particle: #24837B;
     }
 
-    html {
-      font-size: 11px;
-    }
+    html { font-size: 10px; }
 
     body {
-      font-family: 'IBM Plex Mono', ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+      font-family: 'IBM Plex Mono', monospace;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.4;
-      padding: 8px;
+      line-height: 1.35;
+      padding: 4px;
       min-height: 100vh;
+      font-weight: 400;
     }
 
-    /* Header - Compact */
+    /* Header */
     header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      padding: 4px 4px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 6px;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    h1 {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--accent);
-      letter-spacing: -0.5px;
-    }
-
-    .badge {
-      font-size: 9px;
-      padding: 2px 6px;
-      background: var(--accent-dim);
-      color: var(--text);
-      border-radius: 2px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .timestamp {
-      color: var(--muted);
-      font-size: 10px;
-    }
-
-    /* Grid Layout - Dense 4-column on desktop */
-    .dashboard {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
-    }
-
-    @media (max-width: 1400px) {
-      .dashboard {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    @media (max-width: 1000px) {
-      .dashboard {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    /* Panel Styles - More compact */
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 2px;
-      padding: 6px 8px;
-    }
-
-    .panel:hover {
-      background: var(--panel-hover);
-    }
-
-    .panel-title {
-      font-size: 9px;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: var(--accent);
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 4px;
-      margin-bottom: 6px;
-    }
-
-    /* Metric Grid - 2 columns within panel for density */
-    .metric-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0;
-    }
-
-    .metric-grid.single-col {
-      grid-template-columns: 1fr;
-    }
-
-    /* Metric Styles - Compact horizontal layout */
-    .metric {
-      display: flex;
       align-items: baseline;
-      justify-content: space-between;
-      gap: 4px;
-      padding: 3px 4px;
-      border-bottom: 1px solid var(--border);
-      font-size: 10px;
+      padding: 2px 4px 4px;
+      margin-bottom: 4px;
+      border-bottom: 1px solid var(--muted);
     }
 
-    .metric:nth-child(odd) {
-      border-right: 1px solid var(--border);
+    .title {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .timestamp { color: var(--dim); font-size: 9px; }
+
+    /* Main 3-Column Layout: Stats | Tech | AI+Startups */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr 1fr;
+      gap: 3px;
+      align-items: start;
     }
 
-    .metric:nth-last-child(1),
-    .metric:nth-last-child(2) {
-      border-bottom: none;
+    @media (max-width: 1200px) {
+      .main-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .col-right {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3px;
+      }
     }
 
-    .metric-grid.single-col .metric {
-      border-right: none;
+    @media (max-width: 800px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+      .col-right {
+        grid-template-columns: 1fr;
+      }
     }
 
-    .metric-grid.single-col .metric:last-child {
-      border-bottom: none;
-    }
-
-    .metric-info {
-      flex: 1;
-      min-width: 0;
+    /* Stats Column - stacked cards */
+    .col-stats {
       display: flex;
       flex-direction: column;
-      gap: 1px;
+      gap: 3px;
     }
 
-    .metric-name {
-      color: var(--text-dim);
+    /* Card Base */
+    .card {
+      background: var(--card);
       font-size: 9px;
+      border: 1px solid var(--muted);
+      border-radius: 2px;
+    }
+
+    .card-head {
+      background: var(--bg);
+      padding: 2px 4px;
+      font-size: 8px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--muted);
+      font-weight: 500;
+    }
+
+    .card-head::before {
+      content: '>';
+      color: var(--muted);
+      margin-right: 4px;
+    }
+
+    /* Metric Row */
+    .m-row {
+      display: flex;
+      align-items: baseline;
+      padding: 2px 4px;
+      border-bottom: 1px dotted var(--muted);
+      gap: 4px;
+    }
+
+    .m-row:last-child { border-bottom: none; }
+    .m-row:hover { background: rgba(45, 43, 40, 0.03); }
+
+    .m-name {
+      color: var(--dim);
+      font-size: 8px;
+      flex: 1;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
+      min-width: 0;
     }
 
-    .sparkline {
+    .m-spark {
+      color: var(--spark);
+      font-size: 9px;
+      letter-spacing: -0.5px;
+      flex-shrink: 0;
+    }
+
+    .m-val {
+      font-weight: 500;
+      font-size: 10px;
+      flex-shrink: 0;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .m-chg {
       font-size: 8px;
-      color: var(--accent);
-      letter-spacing: -1.5px;
-      font-family: 'IBM Plex Mono', monospace;
-      line-height: 1;
-      display: flex;
-      align-items: center;
-      gap: 2px;
+      flex-shrink: 0;
+      min-width: 36px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
     }
 
-    .metric-data {
+    .m-chg.up { color: var(--up); }
+    .m-chg.down { color: var(--down); }
+
+    /* News Row */
+    .n-row {
+      display: flex;
+      align-items: baseline;
+      padding: 2px 4px;
+      border-bottom: 1px dotted var(--muted);
+      gap: 6px;
+      line-height: 1.4;
+    }
+
+    .n-row:last-child { border-bottom: none; }
+    .n-row:hover { background: rgba(45, 43, 40, 0.03); }
+
+    .n-score {
+      color: var(--score);
+      font-size: 8px;
+      font-weight: 500;
+      min-width: 28px;
+      text-align: right;
+      flex-shrink: 0;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .n-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .n-title {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 9px;
+    }
+
+    .n-title:hover { color: var(--accent); }
+
+    .n-domain {
+      color: var(--dim);
+      font-size: 7px;
+    }
+
+    .n-meta {
       display: flex;
       align-items: baseline;
       gap: 4px;
       flex-shrink: 0;
+      font-size: 7px;
+      color: var(--dim);
     }
 
-    .metric-value {
-      font-weight: 500;
-      font-size: 11px;
-      text-align: right;
-      white-space: nowrap;
-      font-variant-numeric: tabular-nums;
-    }
+    .n-time { color: var(--dim); }
 
-    .metric-change {
-      font-size: 9px;
-      text-align: right;
-      white-space: nowrap;
-      font-variant-numeric: tabular-nums;
-      min-width: 42px;
-    }
-
-    .metric-change.up {
-      color: var(--up);
-    }
-
-    .metric-change.down {
-      color: var(--down);
-    }
-
-    .metric-change.up::before {
-      content: '\25B2';
-      font-size: 6px;
-      margin-right: 1px;
-    }
-
-    .metric-change.down::before {
-      content: '\25BC';
-      font-size: 6px;
-      margin-right: 1px;
-    }
-
-    /* Stories Panel - Spans 2 columns on 4-col, full on mobile */
-    .stories-panel {
-      grid-column: span 2;
-    }
-
-    @media (max-width: 1000px) {
-      .stories-panel {
-        grid-column: 1 / -1;
-      }
-    }
-
-    .story {
-      display: grid;
-      grid-template-columns: 38px 1fr;
-      gap: 6px;
-      padding: 4px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .story:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-
-    .story-score {
-      display: flex;
-      align-items: flex-start;
-      justify-content: flex-end;
-      gap: 2px;
-      color: var(--yellow);
-      font-weight: 500;
-      font-size: 10px;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .heat-indicator {
-      margin-right: 2px;
-    }
-
-    .story-score .heat-indicator + ::before {
-      display: none;
-    }
-
-    .story-content {
-      min-width: 0;
-    }
-
-    .story-title {
-      margin-bottom: 2px;
-      line-height: 1.3;
-      font-size: 10px;
-    }
-
-    .story-title a {
-      color: var(--text);
+    .n-hn {
+      color: var(--link);
       text-decoration: none;
-      word-wrap: break-word;
+      padding: 0 2px;
     }
 
-    .story-title a:hover {
+    .n-hn:hover {
       color: var(--accent);
+      text-decoration: underline;
     }
 
-    .domain {
-      color: var(--muted);
-      font-size: 8px;
-      font-weight: 400;
-    }
-
-    .story-meta {
-      color: var(--muted);
-      font-size: 8px;
+    /* Right Column - stacked AI/ML and Startups */
+    .col-right {
       display: flex;
-      align-items: center;
-      gap: 4px;
+      flex-direction: column;
+      gap: 3px;
     }
 
-    .time-indicator {
-      display: inline-flex;
-      align-items: center;
-      gap: 1px;
-    }
-
-    .meta-sep {
-      color: var(--muted);
-      opacity: 0.5;
-    }
-
-    /* Sidebar Feeds - Dense grid */
-    .sidebar-feeds {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
-      grid-column: 1 / -1;
-    }
-
-    @media (max-width: 1400px) {
-      .sidebar-feeds {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    @media (max-width: 1000px) {
-      .sidebar-feeds {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    .sidebar-story {
-      display: flex;
-      gap: 4px;
-      padding: 3px 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 9px;
-    }
-
-    .sidebar-story:last-child {
-      border-bottom: none;
-    }
-
-    .sidebar-score {
-      color: var(--yellow);
-      font-weight: 500;
-      min-width: 32px;
-      text-align: right;
-      font-variant-numeric: tabular-nums;
-      font-size: 9px;
-    }
-
-    .sidebar-title {
-      line-height: 1.25;
-    }
-
-    .sidebar-title a {
-      color: var(--text-dim);
-      text-decoration: none;
-    }
-
-    .sidebar-title a:hover {
-      color: var(--accent);
-    }
-
-    /* Footer - Minimal */
+    /* Footer with ASCII Art */
     footer {
       margin-top: 8px;
-      padding-top: 6px;
-      border-top: 1px solid var(--border);
+      padding: 6px 4px;
+      border-top: 1px solid var(--muted);
       text-align: center;
-      color: var(--muted);
-      font-size: 8px;
+      color: var(--dim);
+      font-size: 7px;
     }
 
     footer a {
-      color: var(--accent);
+      color: var(--link);
       text-decoration: none;
     }
 
     footer a:hover {
+      color: var(--accent);
       text-decoration: underline;
     }
 
-    /* Responsive - Mobile */
-    @media (max-width: 600px) {
-      html {
-        font-size: 10px;
-      }
-
-      body {
-        padding: 4px;
-      }
-
-      .dashboard {
-        grid-template-columns: 1fr;
-        gap: 4px;
-      }
-
-      .stories-panel,
-      .sidebar-feeds {
-        grid-column: 1;
-      }
-
-      .sidebar-feeds {
-        grid-template-columns: 1fr;
-      }
-
-      .metric-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .metric:nth-child(odd) {
-        border-right: none;
-      }
-
-      .story {
-        grid-template-columns: 32px 1fr;
-      }
-
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 4px;
-        padding: 4px 2px;
-        margin-bottom: 8px;
-      }
+    .footer-links {
+      margin-bottom: 6px;
     }
 
-    /* Empty State - Compact */
-    .empty-state {
-      color: var(--muted);
-      font-style: italic;
-      padding: 8px 4px;
+    .footer-links a {
+      margin: 0 4px;
+    }
+
+    /* Particle ASCII Art */
+    .ascii-footer {
+      margin: 8px auto 4px;
+      font-size: 8px;
+      line-height: 1.1;
+      color: var(--dim);
+      opacity: 0.5;
+      user-select: none;
+      overflow: hidden;
+      max-width: 400px;
+    }
+
+    .ascii-footer .particle {
+      display: inline-block;
+      color: var(--particle);
+      opacity: 0.4;
+    }
+
+    .ascii-footer .meridian-text {
+      color: var(--dim);
+      letter-spacing: 1px;
+    }
+
+    @keyframes particleDrift {
+      0%, 100% { opacity: 0.2; transform: translateY(0); }
+      50% { opacity: 0.6; transform: translateY(-1px); }
+    }
+
+    .ascii-footer .p1 { animation: particleDrift 3s ease-in-out infinite; }
+    .ascii-footer .p2 { animation: particleDrift 3s ease-in-out infinite 0.3s; }
+    .ascii-footer .p3 { animation: particleDrift 3s ease-in-out infinite 0.6s; }
+    .ascii-footer .p4 { animation: particleDrift 3s ease-in-out infinite 0.9s; }
+    .ascii-footer .p5 { animation: particleDrift 3s ease-in-out infinite 1.2s; }
+    .ascii-footer .p6 { animation: particleDrift 3s ease-in-out infinite 1.5s; }
+
+    .empty {
+      color: var(--dim);
+      font-size: 8px;
+      padding: 6px 4px;
       text-align: center;
-      font-size: 9px;
     }
 
-    /* Metrics Panel specific styling */
-    .metrics-panel {
-      min-width: 0;
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .ascii-footer .particle {
+        animation: none;
+        opacity: 0.3;
+      }
     }
   </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">
-    <h1>Bloomberg-Lite</h1>
-    <span class="badge">Live</span>
-  </div>
-  <span class="timestamp">Updated: 2025-12-20 16:11 UTC</span>
+  <span class="title">Meridian</span>
+  <span class="timestamp">2025-12-20 17:43 UTC</span>
 </header>
 
-<div class="dashboard">
+<div class="main-grid">
   
-  
-  <section class="panel metrics-panel">
-    <div class="panel-title">🇺🇸 US Economy</div>
+  <div class="col-stats">
     
-      <div class="metric-grid">
-      
-      <div class="metric">
-        <div class="metric-info">
-          <div class="metric-name">US GDP Growth</div>
-          
-          <div class="sparkline">⬇█▁▁▁      </div>
-          
-        </div>
-        <div class="metric-data">
-          <div class="metric-value">1.8%</div>
-          <div class="metric-change down">-0.10pp</div>
-        </div>
-      </div>
-      
-      <div class="metric">
-        <div class="metric-info">
-          <div class="metric-name">US Inflation</div>
-          
-          <div class="sparkline">→▃█▂▁      </div>
-          
-        </div>
-        <div class="metric-data">
-          <div class="metric-value">2.2%</div>
-          <div class="metric-change ">0.00pp</div>
-        </div>
-      </div>
-      
-      <div class="metric">
-        <div class="metric-info">
-          <div class="metric-name">us.real_rate</div>
-          
-        </div>
-        <div class="metric-data">
-          <div class="metric-value">—</div>
-          <div class="metric-change "></div>
-        </div>
-      </div>
-      
-      <div class="metric">
-        <div class="metric-info">
-          <div class="metric-name">US Unemployment</div>
-          
-          <div class="sparkline">⬇█  ▁▂▂▁▁  </div>
-          
-        </div>
-        <div class="metric-data">
-          <div class="metric-value">3.7%</div>
-          <div class="metric-change down">-0.10pp</div>
-        </div>
-      </div>
-      
-      <div class="metric">
-        <div class="metric-info">
-          <div class="metric-name">US Gov Debt</div>
-          
-          <div class="sparkline">⬆▂  ▁▂▃▄▆▇█</div>
-          
-        </div>
-        <div class="metric-data">
-          <div class="metric-value">143.00</div>
-          <div class="metric-change up">+3.00</div>
-        </div>
-      </div>
-      
-      <div class="metric">
-        <div class="metric-info">
-          <div class="metric-name">US Current Account</div>
-          
-          <div class="sparkline">⬆▄▂█  ▄▄▄▄▅</div>
-          
-        </div>
-        <div class="metric-data">
-          <div class="metric-value">-3.50</div>
-          <div class="metric-change up">+0.10</div>
-        </div>
-      </div>
-      
-      </div>
-    
-  </section>
-  
-  <section class="panel metrics-panel">
-    <div class="panel-title">🇪🇺 Eurozone</div>
-    
-      <div class="metric-grid">
-      
-      <div class="metric">
-        <div class="metric-info">
-          <div class="metric-name">Eurozone GDP Growth</div>
-          
-          <div class="sparkline">⬇█▂        </div>
-          
-        </div>
-        <div class="metric-data">
-          <div class="metric-value">1.4%</div>
-          <div class="metric-change down">-0.10pp</div>
-        </div>
-      </div>
-      
-      <div class="metric">
-        <div class="metric-info">
-          <div class="metric-name">EU HICP Inflation</div>
-          
-          <div class="sparkline">→█▆▆ ▂▂▂▆▄▄</div>
-          
-        </div>
-        <div class="metric-data">
-          <div class="metric-value">2.1%</div>
-          <div class="metric-change ">0.00pp</div>
-        </div>
-      </div>
-      
-      <div class="metric">
-        <div class="metric-info">
-          <div class="metric-name">eu.real_rate</div>
-          
-        </div>
-        <div class="metric-data">
-          <div class="metric-value">—</div>
-          <div class="metric-change "></div>
-        </div>
-      </div>
-      
-      <div class="metric">
-        <div class="metric-info">
-          <div class="metric-name">Germany Unemployment</div>
-          
-          <div class="sparkline">→▆▂▂▄█▄▁   </div>
-          
-        </div>
-        <div class="metric-data">
-          <div class="metric-value">2.9%</div>
-          <div class="metric-change ">0.00pp</div>
-        </div>
-      </div>
-      
-      </div>
-    
-  </section>
-  
-  <section class="panel metrics-panel">
-    <div class="panel-title"> China</div>
-    
-      <div class="metric-grid">
-      
-      <div class="metric">
-        <div class="metric-info">
-          <div class="metric-name">China GDP Growth</div>
-          
-          <div class="sparkline">⬇█ ▃▂▂▁▁▁  </div>
-          
-        </div>
-        <div class="metric-data">
-          <div class="metric-value">3.4%</div>
-          <div class="metric-change down">-0.30pp</div>
-        </div>
-      </div>
-      
-      <div class="metric">
-        <div class="metric-info">
-          <div class="metric-name">China Inflation</div>
-          
-          <div class="sparkline">⬆▃█   ▂▅▇▇█</div>
-          
-        </div>
-        <div class="metric-data">
-          <div class="metric-value">2.0%</div>
-          <div class="metric-change up">+0.10pp</div>
-        </div>
-      </div>
-      
-      <div class="metric">
-        <div class="metric-info">
-          <div class="metric-name">China Real Rate</div>
-          
-          <div class="sparkline">⬆▆▄ ▁▄▆ ▃▇█</div>
-          
-        </div>
-        <div class="metric-data">
-          <div class="metric-value">5.1%</div>
-          <div class="metric-change up">+0.20pp</div>
-        </div>
-      </div>
-      
-      <div class="metric">
-        <div class="metric-info">
-          <div class="metric-name">China Unemployment</div>
-          
-          <div class="sparkline">→ █▁       </div>
-          
-        </div>
-        <div class="metric-data">
-          <div class="metric-value">5.1%</div>
-          <div class="metric-change ">0.00pp</div>
-        </div>
-      </div>
-      
-      <div class="metric">
-        <div class="metric-info">
-          <div class="metric-name">China Current Account</div>
-          
-          <div class="sparkline">⬇▂▄ ▃█▅▄▄▃▂</div>
-          
-        </div>
-        <div class="metric-data">
-          <div class="metric-value">2.10</div>
-          <div class="metric-change down">-0.10</div>
-        </div>
-      </div>
-      
-      </div>
-    
-  </section>
-  
-  <section class="panel metrics-panel">
-    <div class="panel-title"> Japan</div>
-    
-      <div class="metric-grid">
-      
-      <div class="metric">
-        <div class="metric-info">
-          <div class="metric-name">Japan GDP QoQ</div>
-          
-          <div class="sparkline">⬇▆ ▇▃▆█▆▆▇▃</div>
-          
-        </div>
-        <div class="metric-data">
-          <div class="metric-value">-2.3%</div>
-          <div class="metric-change down">-4.40pp</div>
-        </div>
-      </div>
-      
-      <div class="metric">
-        <div class="metric-info">
-          <div class="metric-name">Japan Inflation</div>
-          
-          <div class="sparkline">→ ▆█▆█▅▅▅▅▅</div>
-          
-        </div>
-        <div class="metric-data">
-          <div class="metric-value">2.0%</div>
-          <div class="metric-change ">0.00pp</div>
-        </div>
-      </div>
-      
-      <div class="metric">
-        <div class="metric-info">
-          <div class="metric-name">Japan Real Rate</div>
-          
-          <div class="sparkline">⬆▆▅█▇▅▄  ▂▃</div>
-          
-        </div>
-        <div class="metric-data">
-          <div class="metric-value">1.1%</div>
-          <div class="metric-change up">+0.50pp</div>
-        </div>
-      </div>
-      
-      <div class="metric">
-        <div class="metric-info">
-          <div class="metric-name">Japan Unemployment</div>
-          
-          <div class="sparkline">⬇██▂▅▅█ ▂█▅</div>
-          
-        </div>
-        <div class="metric-data">
-          <div class="metric-value">2.5%</div>
-          <div class="metric-change down">-0.10pp</div>
-        </div>
-      </div>
-      
-      <div class="metric">
-        <div class="metric-info">
-          <div class="metric-name">Japan Industrial Prod</div>
-          
-          <div class="sparkline">⬇▄▅█   ▁ ▁▁</div>
-          
-        </div>
-        <div class="metric-data">
-          <div class="metric-value">101.6</div>
-          <div class="metric-change down">-0.40</div>
-        </div>
-      </div>
-      
-      </div>
-    
-  </section>
-  
-  <section class="panel metrics-panel">
-    <div class="panel-title">🌐 Global Markets</div>
-    
-      <div class="metric-grid">
-      
-      <div class="metric">
-        <div class="metric-info">
-          <div class="metric-name">S&amp;P 500</div>
-          
-          <div class="sparkline">⬆▅▅▇█▄▄▃ ▂▅</div>
-          
-        </div>
-        <div class="metric-data">
-          <div class="metric-value">6834.0</div>
-          <div class="metric-change up">+59.00</div>
-        </div>
-      </div>
-      
-      <div class="metric">
-        <div class="metric-info">
-          <div class="metric-name">Brent Crude</div>
-          
-          <div class="sparkline">⬆█▆▇▅▄▃ ▁▂▃</div>
-          
-        </div>
-        <div class="metric-data">
-          <div class="metric-value">$60.47</div>
-          <div class="metric-change up">+0.65</div>
-        </div>
-      </div>
-      
-      <div class="metric">
-        <div class="metric-info">
-          <div class="metric-name">Gold</div>
-          
-          <div class="sparkline">⬆   ▄▅▅▅▇▇█</div>
-          
-        </div>
-        <div class="metric-data">
-          <div class="metric-value">$4,361.00</div>
-          <div class="metric-change up">+21.00</div>
-        </div>
-      </div>
-      
-      <div class="metric">
-        <div class="metric-info">
-          <div class="metric-name">US Dollar Index</div>
-          
-          <div class="sparkline">⬆▇█▄ ▁  ▁▁▃</div>
-          
-        </div>
-        <div class="metric-data">
-          <div class="metric-value">98.6</div>
-          <div class="metric-change up">+0.20</div>
-        </div>
-      </div>
-      
-      </div>
-    
-  </section>
-  
-  <section class="panel metrics-panel">
-    <div class="panel-title">₿ Crypto</div>
-    
-      <div class="metric-grid single-col">
-      
-      <div class="metric">
-        <div class="metric-info">
-          <div class="metric-name">Bitcoin</div>
-          
-          <div class="sparkline">⬆█▅▅▃▁▂  ▃▃</div>
-          
-        </div>
-        <div class="metric-data">
-          <div class="metric-value">$88,159.00</div>
-          <div class="metric-change up">+55.00</div>
-        </div>
-      </div>
-      
-      <div class="metric">
-        <div class="metric-info">
-          <div class="metric-name">Ethereum</div>
-          
-          <div class="sparkline">→█▅▅▄▂▂  ▂▂</div>
-          
-        </div>
-        <div class="metric-data">
-          <div class="metric-value">$2,977.00</div>
-          <div class="metric-change ">0.00</div>
-        </div>
-      </div>
-      
-      </div>
-    
-  </section>
-  
-
-  
-  <section class="panel stories-panel">
-    <div class="panel-title">💻 Tech Discussion</div>
-    
-    
+    <div class="card">
+      <div class="card-head">US Economy</div>
       
         
+        <div class="m-row">
+          <span class="m-name">US GDP Growth</span>
+          <span class="m-spark">⣄⣤⡄⣧⣤⣠⣤⣀</span>
+          <span class="m-val">1.8%</span>
+          <span class="m-chg down">-0.10pp</span>
+        </div>
+        
+        <div class="m-row">
+          <span class="m-name">US Inflation</span>
+          <span class="m-spark">⠀⣀⠀⣼⣄⣀⣀⣀</span>
+          <span class="m-val">2.2%</span>
+          <span class="m-chg ">0.00pp</span>
+        </div>
+        
+        <div class="m-row">
+          <span class="m-name">US Real Interest Rate</span>
+          <span class="m-spark">⣾⣤⣀⣀⣠⣤⣴⡄</span>
+          <span class="m-val">-1.1%</span>
+          <span class="m-chg down">-3.90pp</span>
+        </div>
+        
+        <div class="m-row">
+          <span class="m-name">US Unemployment</span>
+          <span class="m-spark">⣀⠀⢸⡀⠀⠀⠀⠀</span>
+          <span class="m-val">3.7%</span>
+          <span class="m-chg down">-0.10pp</span>
+        </div>
+        
+        <div class="m-row">
+          <span class="m-name">US Gov Debt/GDP</span>
+          <span class="m-spark">⠀⠀⢠⣄⣀⣤⣴⣾</span>
+          <span class="m-val">143.0%</span>
+          <span class="m-chg up">+3.00pp</span>
+        </div>
+        
+        <div class="m-row">
+          <span class="m-name">US Current Account</span>
+          <span class="m-spark">⣶⣷⣦⠀⡀⠀⠀⠀</span>
+          <span class="m-val">-3.5%</span>
+          <span class="m-chg up">+0.10pp</span>
+        </div>
+        
       
+    </div>
     
+    <div class="card">
+      <div class="card-head">Eurozone</div>
       
+        
+        <div class="m-row">
+          <span class="m-name">EU GDP Growth</span>
+          <span class="m-spark">⣤⣤⡄⣧⣤⣤⣤⣤</span>
+          <span class="m-val">1.4%</span>
+          <span class="m-chg down">-0.10pp</span>
+        </div>
+        
+        <div class="m-row">
+          <span class="m-name">EU HICP Inflation</span>
+          <span class="m-spark">⡄⣠⣾⣤⡄⣀⣠⣤</span>
+          <span class="m-val">2.1%</span>
+          <span class="m-chg ">0.00pp</span>
+        </div>
+        
+        <div class="m-row">
+          <span class="m-name">EU Policy Rate</span>
+          <span class="m-spark">⠀⣠⣴⣾⣶⣤⣄⡀</span>
+          <span class="m-val">2.0%</span>
+          <span class="m-chg down">-0.25pp</span>
+        </div>
+        
+        <div class="m-row">
+          <span class="m-name">Germany Unemployment</span>
+          <span class="m-spark">⣧⡀⢀⡀⢀⣄⠀⠀</span>
+          <span class="m-val">2.9%</span>
+          <span class="m-chg ">0.00pp</span>
+        </div>
+        
+      
+    </div>
     
+    <div class="card">
+      <div class="card-head">China</div>
       
+        
+        <div class="m-row">
+          <span class="m-name">China GDP Growth</span>
+          <span class="m-spark">⣤⣤⡄⡇⣀⣀⣀⠀</span>
+          <span class="m-val">3.4%</span>
+          <span class="m-chg down">-0.30pp</span>
+        </div>
+        
+        <div class="m-row">
+          <span class="m-name">China Inflation</span>
+          <span class="m-spark">⣤⣤⣷⣠⠀⠀⣠⣤</span>
+          <span class="m-val">2.0%</span>
+          <span class="m-chg up">+0.10pp</span>
+        </div>
+        
+        <div class="m-row">
+          <span class="m-name">China Real Rate</span>
+          <span class="m-spark">⡇⢠⣴⣦⢀⣴⢠⣶</span>
+          <span class="m-val">5.1%</span>
+          <span class="m-chg up">+0.20pp</span>
+        </div>
+        
+        <div class="m-row">
+          <span class="m-name">China Unemployment</span>
+          <span class="m-spark">⠀⣸⣸⣀⣀⣀⣀⣀</span>
+          <span class="m-val">5.1%</span>
+          <span class="m-chg ">0.00pp</span>
+        </div>
+        
+        <div class="m-row">
+          <span class="m-name">China Current Account</span>
+          <span class="m-spark">⣆⡀⢀⣤⣠⣷⣤⣤</span>
+          <span class="m-val">2.1%</span>
+          <span class="m-chg down">-0.10pp</span>
+        </div>
+        
+      
+    </div>
     
+    <div class="card">
+      <div class="card-head">Japan</div>
       
+        
+        <div class="m-row">
+          <span class="m-name">Japan GDP QoQ</span>
+          <span class="m-spark">⣇⣆⣴⡄⣄⣴⣤⣄</span>
+          <span class="m-val">-2.3%</span>
+          <span class="m-chg down">-4.40pp</span>
+        </div>
+        
+        <div class="m-row">
+          <span class="m-name">Japan Inflation</span>
+          <span class="m-spark">⡀⢀⠀⢰⣷⣧⣤⣤</span>
+          <span class="m-val">2.0%</span>
+          <span class="m-chg ">0.00pp</span>
+        </div>
+        
+        <div class="m-row">
+          <span class="m-name">Japan Real Rate</span>
+          <span class="m-spark">⣾⣶⣶⣦⣷⣤⠀⣀</span>
+          <span class="m-val">1.1%</span>
+          <span class="m-chg up">+0.50pp</span>
+        </div>
+        
+        <div class="m-row">
+          <span class="m-name">Japan Unemployment</span>
+          <span class="m-spark">⣿⣿⣸⣿⣠⣼⢀⣧</span>
+          <span class="m-val">2.5%</span>
+          <span class="m-chg down">-0.10pp</span>
+        </div>
+        
+        <div class="m-row">
+          <span class="m-name">Japan Industrial Prod</span>
+          <span class="m-spark">⣤⣼⣄⣀⡄⠀⠀⠀</span>
+          <span class="m-val">101.6</span>
+          <span class="m-chg down">-0.40</span>
+        </div>
+        
+      
+    </div>
     
+    <div class="card">
+      <div class="card-head">Global Markets</div>
       
+        
+        <div class="m-row">
+          <span class="m-name">S&amp;P 500</span>
+          <span class="m-spark">⣤⣤⣶⣤⣾⣤⡀⣠</span>
+          <span class="m-val">6834.0</span>
+          <span class="m-chg up">+59.00</span>
+        </div>
+        
+        <div class="m-row">
+          <span class="m-name">Brent Crude</span>
+          <span class="m-spark">⣶⣴⣾⣤⣄⣀⠀⢀</span>
+          <span class="m-val">$60.47</span>
+          <span class="m-chg up">+0.65</span>
+        </div>
+        
+        <div class="m-row">
+          <span class="m-name">Gold</span>
+          <span class="m-spark">⢀⠀⠀⠀⢠⣤⣴⣾</span>
+          <span class="m-val">$4,361.00</span>
+          <span class="m-chg up">+21.00</span>
+        </div>
+        
+        <div class="m-row">
+          <span class="m-name">US Dollar Index</span>
+          <span class="m-spark">⣷⣆⣤⣴⡀⠀⠀⢀</span>
+          <span class="m-val">98.6</span>
+          <span class="m-chg up">+0.20</span>
+        </div>
+        
+      
+    </div>
     
-
+    <div class="card">
+      <div class="card-head">Crypto</div>
+      
+        
+        <div class="m-row">
+          <span class="m-name">Bitcoin</span>
+          <span class="m-spark">⣤⣤⣷⣦⣄⢀⠀⣀</span>
+          <span class="m-val">$88,120.00</span>
+          <span class="m-chg up">+16.00</span>
+        </div>
+        
+        <div class="m-row">
+          <span class="m-name">Ethereum</span>
+          <span class="m-spark">⣀⣠⣾⣦⣄⣀⠀⣀</span>
+          <span class="m-val">$2,976.00</span>
+          <span class="m-chg down">-1.00</span>
+        </div>
+        
+      
+    </div>
     
-      
-      <div class="story">
-        <div class="story-score"><span class="heat-indicator">⚡</span>636</div>
-        <div class="story-content">
-          <div class="story-title">
-            <a href="https://garagehq.deuxfleurs.fr/" target="_blank" rel="noopener">
-              Garage – An S3 object store so reliable you can run it outside datacenters <span class="domain">(garagehq.deuxfleurs.fr)</span>
-            </a>
-          </div>
-          <div class="story-meta">
-            <span class="time-indicator">📅1d</span>
-            <span class="meta-sep">·</span>
-            <span>140 cmt</span>
-            <span class="meta-sep">·</span>
-            <a href="https://news.ycombinator.com/item?id=46326984" target="_blank" rel="noopener">hn</a>
-          </div>
-        </div>
-      </div>
-      
-      <div class="story">
-        <div class="story-score"><span class="heat-indicator">⚡</span>630</div>
-        <div class="story-content">
-          <div class="story-title">
-            <a href="https://webkit.org/blog/17660/introducing-css-grid-lanes/" target="_blank" rel="noopener">
-              CSS Grid Lanes <span class="domain">(webkit.org)</span>
-            </a>
-          </div>
-          <div class="story-meta">
-            <span class="time-indicator">🕐22h</span>
-            <span class="meta-sep">·</span>
-            <span>185 cmt</span>
-            <span class="meta-sep">·</span>
-            <a href="https://news.ycombinator.com/item?id=46331586" target="_blank" rel="noopener">hn</a>
-          </div>
-        </div>
-      </div>
-      
-      <div class="story">
-        <div class="story-score"><span class="heat-indicator">⚡</span>614</div>
-        <div class="story-content">
-          <div class="story-title">
-            <a href="https://mistral.ai/news/mistral-ocr-3" target="_blank" rel="noopener">
-              Mistral OCR 3 <span class="domain">(mistral.ai)</span>
-            </a>
-          </div>
-          <div class="story-meta">
-            <span class="time-indicator">📅2d</span>
-            <span class="meta-sep">·</span>
-            <span>111 cmt</span>
-            <span class="meta-sep">·</span>
-            <a href="https://news.ycombinator.com/item?id=46313390" target="_blank" rel="noopener">hn</a>
-          </div>
-        </div>
-      </div>
-      
-      <div class="story">
-        <div class="story-score"><span class="heat-indicator">✦</span>314</div>
-        <div class="story-content">
-          <div class="story-title">
-            <a href="https://www.theregister.com/2025/12/19/airbus_sovereign_cloud/" target="_blank" rel="noopener">
-              Airbus to migrate critical apps to a sovereign Euro cloud <span class="domain">(theregister.com)</span>
-            </a>
-          </div>
-          <div class="story-meta">
-            <span class="time-indicator">🕐12h</span>
-            <span class="meta-sep">·</span>
-            <span>241 cmt</span>
-            <span class="meta-sep">·</span>
-            <a href="https://news.ycombinator.com/item?id=46334533" target="_blank" rel="noopener">hn</a>
-          </div>
-        </div>
-      </div>
-      
-      <div class="story">
-        <div class="story-score"><span class="heat-indicator">✦</span>275</div>
-        <div class="story-content">
-          <div class="story-title">
-            <a href="https://lists.nanog.org/archives/list/nanog@lists.nanog.org/message/ACADD3NKOG2QRWZ56OSNNG7UIEKKTZXL/" target="_blank" rel="noopener">
-              NTP at NIST Boulder Has Lost Power <span class="domain">(lists.nanog.org)</span>
-            </a>
-          </div>
-          <div class="story-meta">
-            <span class="time-indicator">🕐13h</span>
-            <span class="meta-sep">·</span>
-            <span>128 cmt</span>
-            <span class="meta-sep">·</span>
-            <a href="https://news.ycombinator.com/item?id=46334299" target="_blank" rel="noopener">hn</a>
-          </div>
-        </div>
-      </div>
-      
-      <div class="story">
-        <div class="story-score"><span class="heat-indicator">✦</span>229</div>
-        <div class="story-content">
-          <div class="story-title">
-            <a href="https://www.charlesproxy.com/" target="_blank" rel="noopener">
-              Charles Proxy <span class="domain">(charlesproxy.com)</span>
-            </a>
-          </div>
-          <div class="story-meta">
-            <span class="time-indicator">🕐15h</span>
-            <span class="meta-sep">·</span>
-            <span>86 cmt</span>
-            <span class="meta-sep">·</span>
-            <a href="https://news.ycombinator.com/item?id=46333983" target="_blank" rel="noopener">hn</a>
-          </div>
-        </div>
-      </div>
-      
-      <div class="story">
-        <div class="story-score"><span class="heat-indicator">✦</span>209</div>
-        <div class="story-content">
-          <div class="story-title">
-            <a href="https://servury.com/blog/privacy-is-marketing-anonymity-is-architecture/" target="_blank" rel="noopener">
-              Privacy doesn&#39;t mean anything anymore, anonymity does <span class="domain">(servury.com)</span>
-            </a>
-          </div>
-          <div class="story-meta">
-            <span class="time-indicator">🕐14h</span>
-            <span class="meta-sep">·</span>
-            <span>148 cmt</span>
-            <span class="meta-sep">·</span>
-            <a href="https://news.ycombinator.com/item?id=46334025" target="_blank" rel="noopener">hn</a>
-          </div>
-        </div>
-      </div>
-      
-      <div class="story">
-        <div class="story-score"><span class="heat-indicator">•</span>150</div>
-        <div class="story-content">
-          <div class="story-title">
-            <a href="https://thompson2026.com/blog/deviancy-signal/" target="_blank" rel="noopener">
-              The Deviancy Signal: Having &#34;Nothing to Hide&#34; Is a Threat to Us All <span class="domain">(thompson2026.com)</span>
-            </a>
-          </div>
-          <div class="story-meta">
-            <span class="time-indicator">🕐15h</span>
-            <span class="meta-sep">·</span>
-            <span>97 cmt</span>
-            <span class="meta-sep">·</span>
-            <a href="https://news.ycombinator.com/item?id=46333830" target="_blank" rel="noopener">hn</a>
-          </div>
-        </div>
-      </div>
-      
-      <div class="story">
-        <div class="story-score"><span class="heat-indicator">•</span>130</div>
-        <div class="story-content">
-          <div class="story-title">
-            <a href="https://developers.openai.com/codex/skills/" target="_blank" rel="noopener">
-              Skills Officially Comes to Codex <span class="domain">(developers.openai.com)</span>
-            </a>
-          </div>
-          <div class="story-meta">
-            <span class="time-indicator">🕐13h</span>
-            <span class="meta-sep">·</span>
-            <span>66 cmt</span>
-            <span class="meta-sep">·</span>
-            <a href="https://news.ycombinator.com/item?id=46334424" target="_blank" rel="noopener">hn</a>
-          </div>
-        </div>
-      </div>
-      
-      <div class="story">
-        <div class="story-score"><span class="heat-indicator">•</span>122</div>
-        <div class="story-content">
-          <div class="story-title">
-            <a href="https://www.noaa.gov/news-release/noaa-deploys-new-generation-of-ai-driven-global-weather-models" target="_blank" rel="noopener">
-              NOAA deploys new generation of AI-driven global weather models <span class="domain">(noaa.gov)</span>
-            </a>
-          </div>
-          <div class="story-meta">
-            <span class="time-indicator">📅2d</span>
-            <span class="meta-sep">·</span>
-            <span>80 cmt</span>
-            <span class="meta-sep">·</span>
-            <a href="https://news.ycombinator.com/item?id=46306497" target="_blank" rel="noopener">hn</a>
-          </div>
-        </div>
-      </div>
-      
-      <div class="story">
-        <div class="story-score"><span class="heat-indicator">•</span>97</div>
-        <div class="story-content">
-          <div class="story-title">
-            <a href="https://antirez.com/news/157" target="_blank" rel="noopener">
-              Reflections on AI at the End of 2025 <span class="domain">(antirez.com)</span>
-            </a>
-          </div>
-          <div class="story-meta">
-            <span class="time-indicator">🕐11h</span>
-            <span class="meta-sep">·</span>
-            <span>131 cmt</span>
-            <span class="meta-sep">·</span>
-            <a href="https://news.ycombinator.com/item?id=46334819" target="_blank" rel="noopener">hn</a>
-          </div>
-        </div>
-      </div>
-      
-      <div class="story">
-        <div class="story-score"><span class="heat-indicator">•</span>96</div>
-        <div class="story-content">
-          <div class="story-title">
-            <a href="https://brooker.co.za/blog/2025/12/15/database-for-ssd.html" target="_blank" rel="noopener">
-              What Does a Database for SSDs Look Like? <span class="domain">(brooker.co.za)</span>
-            </a>
-          </div>
-          <div class="story-meta">
-            <span class="time-indicator">🕐10h</span>
-            <span class="meta-sep">·</span>
-            <span>69 cmt</span>
-            <span class="meta-sep">·</span>
-            <a href="https://news.ycombinator.com/item?id=46334990" target="_blank" rel="noopener">hn</a>
-          </div>
-        </div>
-      </div>
-      
-      <div class="story">
-        <div class="story-score"><span class="heat-indicator">•</span>95</div>
-        <div class="story-content">
-          <div class="story-title">
-            <a href="https://blog.jcz.dev/gemini-3-pro-vs-25-pro-in-pokemon-crystal" target="_blank" rel="noopener">
-              Gemini 3 Pro vs. 2.5 Pro in Pokemon Crystal <span class="domain">(blog.jcz.dev)</span>
-            </a>
-          </div>
-          <div class="story-meta">
-            <span class="time-indicator">📅4d</span>
-            <span class="meta-sep">·</span>
-            <span>21 cmt</span>
-            <span class="meta-sep">·</span>
-            <a href="https://news.ycombinator.com/item?id=46287848" target="_blank" rel="noopener">hn</a>
-          </div>
-        </div>
-      </div>
-      
-      <div class="story">
-        <div class="story-score"><span class="heat-indicator">•</span>91</div>
-        <div class="story-content">
-          <div class="story-title">
-            <a href="https://github.com/magiblot/tvterm" target="_blank" rel="noopener">
-              A terminal emulator that runs in your terminal. Powered by Turbo Vision <span class="domain">(github.com)</span>
-            </a>
-          </div>
-          <div class="story-meta">
-            <span class="time-indicator">📅3d</span>
-            <span class="meta-sep">·</span>
-            <span>10 cmt</span>
-            <span class="meta-sep">·</span>
-            <a href="https://news.ycombinator.com/item?id=46301847" target="_blank" rel="noopener">hn</a>
-          </div>
-        </div>
-      </div>
-      
-      <div class="story">
-        <div class="story-score"><span class="heat-indicator">•</span>90</div>
-        <div class="story-content">
-          <div class="story-title">
-            <a href="https://map.contrails.org/" target="_blank" rel="noopener">
-              Contrails Map <span class="domain">(map.contrails.org)</span>
-            </a>
-          </div>
-          <div class="story-meta">
-            <span class="time-indicator">🕐13h</span>
-            <span class="meta-sep">·</span>
-            <span>36 cmt</span>
-            <span class="meta-sep">·</span>
-            <a href="https://news.ycombinator.com/item?id=46334296" target="_blank" rel="noopener">hn</a>
-          </div>
-        </div>
-      </div>
-      
-    
-  </section>
+  </div>
 
   
   
-  <div class="sidebar-feeds">
+    
+    <div class="card">
+      <div class="card-head">Tech</div>
+      
+        
+        <div class="n-row">
+          <span class="n-score">645</span>
+          <div class="n-content">
+            <a class="n-title" href="https://webkit.org/blog/17660/introducing-css-grid-lanes/" target="_blank" rel="noopener">CSS Grid Lanes</a>
+            <span class="n-domain"> (webkit.org)</span>
+          </div>
+          <div class="n-meta">
+            <span class="n-time">1d</span>
+            <a class="n-hn" href="https://news.ycombinator.com/item?id=46331586" target="_blank">189c</a>
+          </div>
+        </div>
+        
+        <div class="n-row">
+          <span class="n-score">643</span>
+          <div class="n-content">
+            <a class="n-title" href="https://garagehq.deuxfleurs.fr/" target="_blank" rel="noopener">Garage – An S3 object store so reliable you can run it outside datacenters</a>
+            <span class="n-domain"> (garagehq.deuxfleurs.fr)</span>
+          </div>
+          <div class="n-meta">
+            <span class="n-time">1d</span>
+            <a class="n-hn" href="https://news.ycombinator.com/item?id=46326984" target="_blank">140c</a>
+          </div>
+        </div>
+        
+        <div class="n-row">
+          <span class="n-score">628</span>
+          <div class="n-content">
+            <a class="n-title" href="https://mistral.ai/news/mistral-ocr-3" target="_blank" rel="noopener">Mistral OCR 3</a>
+            <span class="n-domain"> (mistral.ai)</span>
+          </div>
+          <div class="n-meta">
+            <span class="n-time">2d</span>
+            <a class="n-hn" href="https://news.ycombinator.com/item?id=46313390" target="_blank">114c</a>
+          </div>
+        </div>
+        
+        <div class="n-row">
+          <span class="n-score">334</span>
+          <div class="n-content">
+            <a class="n-title" href="https://www.theregister.com/2025/12/19/airbus_sovereign_cloud/" target="_blank" rel="noopener">Airbus to migrate critical apps to a sovereign Euro cloud</a>
+            <span class="n-domain"> (theregister.com)</span>
+          </div>
+          <div class="n-meta">
+            <span class="n-time">14h</span>
+            <a class="n-hn" href="https://news.ycombinator.com/item?id=46334533" target="_blank">267c</a>
+          </div>
+        </div>
+        
+        <div class="n-row">
+          <span class="n-score">310</span>
+          <div class="n-content">
+            <a class="n-title" href="https://lists.nanog.org/archives/list/nanog@lists.nanog.org/message/ACADD3NKOG2QRWZ56OSNNG7UIEKKTZXL/" target="_blank" rel="noopener">NTP at NIST Boulder Has Lost Power</a>
+            <span class="n-domain"> (lists.nanog.org)</span>
+          </div>
+          <div class="n-meta">
+            <span class="n-time">15h</span>
+            <a class="n-hn" href="https://news.ycombinator.com/item?id=46334299" target="_blank">141c</a>
+          </div>
+        </div>
+        
+        <div class="n-row">
+          <span class="n-score">245</span>
+          <div class="n-content">
+            <a class="n-title" href="https://servury.com/blog/privacy-is-marketing-anonymity-is-architecture/" target="_blank" rel="noopener">Privacy doesn&#39;t mean anything anymore, anonymity does</a>
+            <span class="n-domain"> (servury.com)</span>
+          </div>
+          <div class="n-meta">
+            <span class="n-time">16h</span>
+            <a class="n-hn" href="https://news.ycombinator.com/item?id=46334025" target="_blank">173c</a>
+          </div>
+        </div>
+        
+        <div class="n-row">
+          <span class="n-score">238</span>
+          <div class="n-content">
+            <a class="n-title" href="https://www.charlesproxy.com/" target="_blank" rel="noopener">Charles Proxy</a>
+            <span class="n-domain"> (charlesproxy.com)</span>
+          </div>
+          <div class="n-meta">
+            <span class="n-time">16h</span>
+            <a class="n-hn" href="https://news.ycombinator.com/item?id=46333983" target="_blank">90c</a>
+          </div>
+        </div>
+        
+        <div class="n-row">
+          <span class="n-score">155</span>
+          <div class="n-content">
+            <a class="n-title" href="https://developers.openai.com/codex/skills/" target="_blank" rel="noopener">Skills Officially Comes to Codex</a>
+            <span class="n-domain"> (developers.openai.com)</span>
+          </div>
+          <div class="n-meta">
+            <span class="n-time">14h</span>
+            <a class="n-hn" href="https://news.ycombinator.com/item?id=46334424" target="_blank">73c</a>
+          </div>
+        </div>
+        
+        <div class="n-row">
+          <span class="n-score">139</span>
+          <div class="n-content">
+            <a class="n-title" href="https://pierce.dev/notes/go-ahead-self-host-postgres#user-content-fn-1" target="_blank" rel="noopener">Go ahead, self-host Postgres</a>
+            <span class="n-domain"> (pierce.dev)</span>
+          </div>
+          <div class="n-meta">
+            <span class="n-time">6h</span>
+            <a class="n-hn" href="https://news.ycombinator.com/item?id=46336947" target="_blank">95c</a>
+          </div>
+        </div>
+        
+        <div class="n-row">
+          <span class="n-score">125</span>
+          <div class="n-content">
+            <a class="n-title" href="https://blog.jcz.dev/gemini-3-pro-vs-25-pro-in-pokemon-crystal" target="_blank" rel="noopener">Gemini 3 Pro vs. 2.5 Pro in Pokemon Crystal</a>
+            <span class="n-domain"> (blog.jcz.dev)</span>
+          </div>
+          <div class="n-meta">
+            <span class="n-time">4d</span>
+            <a class="n-hn" href="https://news.ycombinator.com/item?id=46287848" target="_blank">35c</a>
+          </div>
+        </div>
+        
+        <div class="n-row">
+          <span class="n-score">112</span>
+          <div class="n-content">
+            <a class="n-title" href="https://antirez.com/news/157" target="_blank" rel="noopener">Reflections on AI at the End of 2025</a>
+            <span class="n-domain"> (antirez.com)</span>
+          </div>
+          <div class="n-meta">
+            <span class="n-time">13h</span>
+            <a class="n-hn" href="https://news.ycombinator.com/item?id=46334819" target="_blank">168c</a>
+          </div>
+        </div>
+        
+        <div class="n-row">
+          <span class="n-score">106</span>
+          <div class="n-content">
+            <a class="n-title" href="https://brooker.co.za/blog/2025/12/15/database-for-ssd.html" target="_blank" rel="noopener">What Does a Database for SSDs Look Like?</a>
+            <span class="n-domain"> (brooker.co.za)</span>
+          </div>
+          <div class="n-meta">
+            <span class="n-time">12h</span>
+            <a class="n-hn" href="https://news.ycombinator.com/item?id=46334990" target="_blank">88c</a>
+          </div>
+        </div>
+        
+        <div class="n-row">
+          <span class="n-score">89</span>
+          <div class="n-content">
+            <a class="n-title" href="https://www.sciencedaily.com/releases/2025/12/251213032617.htm" target="_blank" rel="noopener">New Quantum Antenna Reveals a Hidden Terahertz World</a>
+            <span class="n-domain"> (sciencedaily.com)</span>
+          </div>
+          <div class="n-meta">
+            <span class="n-time">4d</span>
+            <a class="n-hn" href="https://news.ycombinator.com/item?id=46284514" target="_blank">4c</a>
+          </div>
+        </div>
+        
+        <div class="n-row">
+          <span class="n-score">79</span>
+          <div class="n-content">
+            <a class="n-title" href="https://utcc.utoronto.ca/~cks/space/blog/programming/ErrorsShouldRequireFixing" target="_blank" rel="noopener">Log level &#39;error&#39; should mean that something needs to be fixed</a>
+            <span class="n-domain"> (utcc.utoronto.ca)</span>
+          </div>
+          <div class="n-meta">
+            <span class="n-time">3d</span>
+            <a class="n-hn" href="https://news.ycombinator.com/item?id=46301059" target="_blank">33c</a>
+          </div>
+        </div>
+        
+        <div class="n-row">
+          <span class="n-score">78</span>
+          <div class="n-content">
+            <a class="n-title" href="https://www.ianvisits.co.uk/articles/a-train-sized-tunnel-is-now-carrying-electricity-under-south-london-86221/" target="_blank" rel="noopener">A train-sized tunnel is now carrying electricity under South London</a>
+            <span class="n-domain"> (ianvisits.co.uk)</span>
+          </div>
+          <div class="n-meta">
+            <span class="n-time">14h</span>
+            <a class="n-hn" href="https://news.ycombinator.com/item?id=46334483" target="_blank">68c</a>
+          </div>
+        </div>
+        
+        <div class="n-row">
+          <span class="n-score">71</span>
+          <div class="n-content">
+            <a class="n-title" href="https://github.com/ertugrulcetin/immersa" target="_blank" rel="noopener">Immersa: Open-source Web-based 3D Presentation Tool</a>
+            <span class="n-domain"> (github.com)</span>
+          </div>
+          <div class="n-meta">
+            <span class="n-time">9h</span>
+            <a class="n-hn" href="https://news.ycombinator.com/item?id=46336097" target="_blank">11c</a>
+          </div>
+        </div>
+        
+        <div class="n-row">
+          <span class="n-score">27</span>
+          <div class="n-content">
+            <a class="n-title" href="https://www.arduino.cc/product-uno-q/" target="_blank" rel="noopener">Arduino UNO Q bridges high-performance computing with real-time control</a>
+            <span class="n-domain"> (arduino.cc)</span>
+          </div>
+          <div class="n-meta">
+            <span class="n-time">4d</span>
+            <a class="n-hn" href="https://news.ycombinator.com/item?id=46291870" target="_blank">14c</a>
+          </div>
+        </div>
+        
+        <div class="n-row">
+          <span class="n-score">12</span>
+          <div class="n-content">
+            <a class="n-title" href="https://www.a1k0n.net/2025/12/19/tiny-tapeout-demo.html" target="_blank" rel="noopener">Pure Silicon Demo Coding: No CPU, No Memory, Just 4k Gates</a>
+            <span class="n-domain"> (a1k0n.net)</span>
+          </div>
+          <div class="n-meta">
+            <span class="n-time">5h</span>
+            <a class="n-hn" href="https://news.ycombinator.com/item?id=46337438" target="_blank">0c</a>
+          </div>
+        </div>
+        
+        <div class="n-row">
+          <span class="n-score">4</span>
+          <div class="n-content">
+            <a class="n-title" href="http://deater.net/weave/vmwprod/hgr_compress/" target="_blank" rel="noopener">Maximizing Compression of Apple II Hi-Res Images</a>
+            <span class="n-domain"> (deater.net)</span>
+          </div>
+          <div class="n-meta">
+            <span class="n-time">4d</span>
+            <a class="n-hn" href="https://news.ycombinator.com/item?id=46284595" target="_blank">0c</a>
+          </div>
+        </div>
+        
+      
+    </div>
+    
+  
+    
+  
+    
+  
+
+  
+  <div class="col-right">
     
       
     
       
-      <section class="panel">
-        <div class="panel-title">🤖 AI/ML</div>
+      <div class="card">
+        <div class="card-head">AI/ML</div>
         
           
-          <div class="sidebar-story">
-            <div class="sidebar-score">⚡828</div>
-            <div class="sidebar-title">
-              <a href="https://www.koi.ai/blog/urban-vpn-browser-extension-ai-conversations-data-collection" target="_blank" rel="noopener">
-                8M users&#39; AI conversations sold for profit by &#34;privacy&#34; extensions <span class="domain">(koi.ai)</span>
-              </a>
+          <div class="n-row">
+            <span class="n-score">1066</span>
+            <div class="n-content">
+              <a class="n-title" href="https://www.theregister.com/2025/12/02/zig_quits_github_microsoft_ai_obsession/" target="_blank" rel="noopener">Zig quits GitHub, says Microsoft&#39;s AI obsession has ruined the service</a>
+              <span class="n-domain"> (theregister.com)</span>
+            </div>
+            <div class="n-meta">
+              <span class="n-time">2w</span>
+              <a class="n-hn" href="https://news.ycombinator.com/item?id=46131406" target="_blank">615c</a>
             </div>
           </div>
           
-          <div class="sidebar-story">
-            <div class="sidebar-score">⚡822</div>
-            <div class="sidebar-title">
-              <a href="https://martin.kleppmann.com/2025/12/08/ai-formal-verification.html" target="_blank" rel="noopener">
-                AI will make formal verification go mainstream <span class="domain">(martin.kleppmann.com)</span>
-              </a>
+          <div class="n-row">
+            <span class="n-score">1058</span>
+            <div class="n-content">
+              <a class="n-title" href="https://www.finalroundai.com/blog/aws-ceo-ai-cannot-replace-junior-developers" target="_blank" rel="noopener">AWS CEO says replacing junior devs with AI is &#39;one of the dumbest ideas&#39;</a>
+              <span class="n-domain"> (finalroundai.com)</span>
+            </div>
+            <div class="n-meta">
+              <span class="n-time">3d</span>
+              <a class="n-hn" href="https://news.ycombinator.com/item?id=46302267" target="_blank">528c</a>
             </div>
           </div>
           
-          <div class="sidebar-story">
-            <div class="sidebar-score">⚡588</div>
-            <div class="sidebar-title">
-              <a href="https://english.elpais.com/technology/2025-11-30/if-ai-replaces-workers-should-it-also-pay-taxes.html" target="_blank" rel="noopener">
-                If AI replaces workers, should it also pay taxes? <span class="domain">(english.elpais.com)</span>
-              </a>
+          <div class="n-row">
+            <span class="n-score">967</span>
+            <div class="n-content">
+              <a class="n-title" href="https://jonready.com/blog/posts/everyone-in-seattle-hates-ai.html" target="_blank" rel="noopener">Everyone in Seattle hates AI</a>
+              <span class="n-domain"> (jonready.com)</span>
+            </div>
+            <div class="n-meta">
+              <span class="n-time">2w</span>
+              <a class="n-hn" href="https://news.ycombinator.com/item?id=46138952" target="_blank">1065c</a>
             </div>
           </div>
           
-          <div class="sidebar-story">
-            <div class="sidebar-score">⚡560</div>
-            <div class="sidebar-title">
-              <a href="https://www.waterfox.com/blog/no-ai-here-response-to-mozilla/" target="_blank" rel="noopener">
-                No AI* Here – A Response to Mozilla&#39;s Next Chapter <span class="domain">(waterfox.com)</span>
-              </a>
+          <div class="n-row">
+            <span class="n-score">857</span>
+            <div class="n-content">
+              <a class="n-title" href="https://www.businessinsider.com/ibm-ceo-big-tech-ai-capex-data-center-spending-2025-12" target="_blank" rel="noopener">IBM CEO says there is &#39;no way&#39; spending on AI data centers will pay off</a>
+              <span class="n-domain"> (businessinsider.com)</span>
+            </div>
+            <div class="n-meta">
+              <span class="n-time">2w</span>
+              <a class="n-hn" href="https://news.ycombinator.com/item?id=46124324" target="_blank">954c</a>
             </div>
           </div>
           
-          <div class="sidebar-story">
-            <div class="sidebar-score">⚡557</div>
-            <div class="sidebar-title">
-              <a href="https://mastodon.social/@firefoxwebdevs/115740500373677782" target="_blank" rel="noopener">
-                Firefox will have an option to disable all AI features <span class="domain">(mastodon.social)</span>
-              </a>
+          <div class="n-row">
+            <span class="n-score">828</span>
+            <div class="n-content">
+              <a class="n-title" href="https://www.koi.ai/blog/urban-vpn-browser-extension-ai-conversations-data-collection" target="_blank" rel="noopener">8M users&#39; AI conversations sold for profit by &#34;privacy&#34; extensions</a>
+              <span class="n-domain"> (koi.ai)</span>
+            </div>
+            <div class="n-meta">
+              <span class="n-time">4d</span>
+              <a class="n-hn" href="https://news.ycombinator.com/item?id=46284266" target="_blank">245c</a>
             </div>
           </div>
           
-          <div class="sidebar-story">
-            <div class="sidebar-score">✦459</div>
-            <div class="sidebar-title">
-              <a href="https://www.japantimes.co.jp/business/2025/12/18/tech/china-west-ai-chips/" target="_blank" rel="noopener">
-                How China built its ‘Manhattan Project’ to rival the West in AI chips <span class="domain">(japantimes.co.jp)</span>
-              </a>
+          <div class="n-row">
+            <span class="n-score">822</span>
+            <div class="n-content">
+              <a class="n-title" href="https://martin.kleppmann.com/2025/12/08/ai-formal-verification.html" target="_blank" rel="noopener">AI will make formal verification go mainstream</a>
+              <span class="n-domain"> (martin.kleppmann.com)</span>
+            </div>
+            <div class="n-meta">
+              <span class="n-time">3d</span>
+              <a class="n-hn" href="https://news.ycombinator.com/item?id=46294574" target="_blank">428c</a>
             </div>
           </div>
           
-          <div class="sidebar-story">
-            <div class="sidebar-score">✦408</div>
-            <div class="sidebar-title">
-              <a href="https://martinalderson.com/posts/ai-agents-are-starting-to-eat-saas/" target="_blank" rel="noopener">
-                AI agents are starting to eat SaaS <span class="domain">(martinalderson.com)</span>
-              </a>
+          <div class="n-row">
+            <span class="n-score">821</span>
+            <div class="n-content">
+              <a class="n-title" href="https://alexschapiro.com/security/vulnerability/2025/12/02/filevine-api-100k" target="_blank" rel="noopener">Reverse engineering a $1B Legal AI tool exposed 100k+ confidential files</a>
+              <span class="n-domain"> (alexschapiro.com)</span>
+            </div>
+            <div class="n-meta">
+              <span class="n-time">2w</span>
+              <a class="n-hn" href="https://news.ycombinator.com/item?id=46137514" target="_blank">289c</a>
             </div>
           </div>
           
-          <div class="sidebar-story">
-            <div class="sidebar-score">✦376</div>
-            <div class="sidebar-title">
-              <a href="https://www.reuters.com/world/americas/jetblue-flight-averts-mid-air-collision-with-us-air-force-jet-2025-12-15/" target="_blank" rel="noopener">
-                JetBlue flight averts mid-air collision with US Air Force jet <span class="domain">(reuters.com)</span>
-              </a>
+          <div class="n-row">
+            <span class="n-score">819</span>
+            <div class="n-content">
+              <a class="n-title" href="https://www.theverge.com/news/836212/openai-code-red-chatgpt" target="_blank" rel="noopener">OpenAI declares &#39;code red&#39; as Google catches up in AI race</a>
+              <span class="n-domain"> (theverge.com)</span>
+            </div>
+            <div class="n-meta">
+              <span class="n-time">2w</span>
+              <a class="n-hn" href="https://news.ycombinator.com/item?id=46121870" target="_blank">930c</a>
+            </div>
+          </div>
+          
+          <div class="n-row">
+            <span class="n-score">704</span>
+            <div class="n-content">
+              <a class="n-title" href="https://arxiv.org/abs/2512.04047" target="_blank" rel="noopener">How elites could shape mass preferences as AI reduces persuasion costs</a>
+              <span class="n-domain"> (arxiv.org)</span>
+            </div>
+            <div class="n-meta">
+              <span class="n-time">2w</span>
+              <a class="n-hn" href="https://news.ycombinator.com/item?id=46145180" target="_blank">661c</a>
+            </div>
+          </div>
+          
+          <div class="n-row">
+            <span class="n-score">597</span>
+            <div class="n-content">
+              <a class="n-title" href="https://arstechnica.com/gadgets/2025/11/the-eu-made-apple-adopt-new-wi-fi-standards-and-now-android-can-support-airdrop/" target="_blank" rel="noopener">The EU made Apple adopt new Wi-Fi standards, and now Android can support AirDrop</a>
+              <span class="n-domain"> (arstechnica.com)</span>
+            </div>
+            <div class="n-meta">
+              <span class="n-time">3w</span>
+              <a class="n-hn" href="https://news.ycombinator.com/item?id=46062504" target="_blank">311c</a>
             </div>
           </div>
           
         
-      </section>
+      </div>
       
     
       
-      <section class="panel">
-        <div class="panel-title">🏗 Infrastructure</div>
-        
-          
-          <div class="sidebar-story">
-            <div class="sidebar-score">•78</div>
-            <div class="sidebar-title">
-              <a href="https://github.com/moasq/production-saas-starter" target="_blank" rel="noopener">
-                Show HN: I open-sourced my Go and Next B2B SaaS Starter (deploy... <span class="domain">(github.com)</span>
-              </a>
-            </div>
-          </div>
-          
-        
-      </section>
+    
+
+    
       
     
       
-      <section class="panel">
-        <div class="panel-title">📊 Markets &amp; Finance</div>
-        
-          <div class="empty-state">No stories</div>
-        
-      </section>
-      
     
       
-      <section class="panel">
-        <div class="panel-title">🇨🇳 China Tech</div>
+      <div class="card">
+        <div class="card-head">Startups</div>
         
           
-          <div class="sidebar-story">
-            <div class="sidebar-score">•25</div>
-            <div class="sidebar-title">
-              <a href="https://apnews.com/article/whistleblower-china-surveillance-tech-silicon-valley-adbd0bcfbb0892bfcb85948acb3f515f" target="_blank" rel="noopener">
-                A Chinese whistleblower living in the US is being hunted by... <span class="domain">(apnews.com)</span>
-              </a>
+          <div class="n-row">
+            <span class="n-score">362</span>
+            <div class="n-content">
+              <a class="n-title" href="https://www.mikeayles.com/#kidoom" target="_blank" rel="noopener">Show HN: KiDoom – Running DOOM on PCB Traces</a>
+              <span class="n-domain"> (mikeayles.com)</span>
+            </div>
+            <div class="n-meta">
+              <span class="n-time">3w</span>
+              <a class="n-hn" href="https://news.ycombinator.com/item?id=46051449" target="_blank">49c</a>
             </div>
           </div>
           
-          <div class="sidebar-story">
-            <div class="sidebar-score">•21</div>
-            <div class="sidebar-title">
-              <a href="https://www.scmp.com/news/china/science/article/3335518/chinese-desalination-plant-makes-fresh-water-cheaper-tap-water-plus-green-hydrogen" target="_blank" rel="noopener">
-                Chinese desalination plant makes fresh water cheaper than tap water <span class="domain">(scmp.com)</span>
-              </a>
+          <div class="n-row">
+            <span class="n-score">246</span>
+            <div class="n-content">
+              <a class="n-title" href="https://pub.towardsai.net/i-reverse-engineered-200-ai-startups-73-are-lying-a8610acab0d3" target="_blank" rel="noopener">73% of AI startups are just prompt engineering</a>
+              <span class="n-domain"> (pub.towardsai.net)</span>
+            </div>
+            <div class="n-meta">
+              <span class="n-time">3w</span>
+              <a class="n-hn" href="https://news.ycombinator.com/item?id=46024644" target="_blank">205c</a>
             </div>
           </div>
           
-          <div class="sidebar-story">
-            <div class="sidebar-score">•20</div>
-            <div class="sidebar-title">
-              <a href="https://www.wsj.com/world/china/ice-holding-chinese-man-who-documented-uyghur-camps-a4702045" target="_blank" rel="noopener">
-                ICE Holding Chinese Man Who Documented Uyghur Camps <span class="domain">(wsj.com)</span>
-              </a>
+          <div class="n-row">
+            <span class="n-score">228</span>
+            <div class="n-content">
+              <a class="n-title" href="https://news.ycombinator.com/item?id=46163121" target="_blank" rel="noopener">I&#39;m Peter Roberts, immigration attorney who does work for YC and startups. AMA</a>
+              
+            </div>
+            <div class="n-meta">
+              <span class="n-time">2w</span>
+              <a class="n-hn" href="https://news.ycombinator.com/item?id=46163121" target="_blank">306c</a>
+            </div>
+          </div>
+          
+          <div class="n-row">
+            <span class="n-score">160</span>
+            <div class="n-content">
+              <a class="n-title" href="https://notesfrombelow.org/article/silicon-valley-startups-doing-evil-again-and-again" target="_blank" rel="noopener">Silicon Valley startups: being evil, again and again</a>
+              <span class="n-domain"> (notesfrombelow.org)</span>
+            </div>
+            <div class="n-meta">
+              <span class="n-time">3w</span>
+              <a class="n-hn" href="https://news.ycombinator.com/item?id=46022704" target="_blank">125c</a>
+            </div>
+          </div>
+          
+          <div class="n-row">
+            <span class="n-score">86</span>
+            <div class="n-content">
+              <a class="n-title" href="https://www.blaizenterprises.com/cynthia.html" target="_blank" rel="noopener">Show HN: Cynthia – Reliably play MIDI music files – MIT / Portable / Windows</a>
+              <span class="n-domain"> (blaizenterprises.com)</span>
+            </div>
+            <div class="n-meta">
+              <span class="n-time">3w</span>
+              <a class="n-hn" href="https://news.ycombinator.com/item?id=46034145" target="_blank">33c</a>
+            </div>
+          </div>
+          
+          <div class="n-row">
+            <span class="n-score">79</span>
+            <div class="n-content">
+              <a class="n-title" href="https://www.techfounderstack.com/p/why-startups-die" target="_blank" rel="noopener">Why Startups Die</a>
+              <span class="n-domain"> (techfounderstack.com)</span>
+            </div>
+            <div class="n-meta">
+              <span class="n-time">1w</span>
+              <a class="n-hn" href="https://news.ycombinator.com/item?id=46189632" target="_blank">60c</a>
+            </div>
+          </div>
+          
+          <div class="n-row">
+            <span class="n-score">69</span>
+            <div class="n-content">
+              <a class="n-title" href="https://news.ycombinator.com/item?id=46292682" target="_blank" rel="noopener">Ask HN: How are you LLM-coding in an established code base?</a>
+              
+            </div>
+            <div class="n-meta">
+              <span class="n-time">3d</span>
+              <a class="n-hn" href="https://news.ycombinator.com/item?id=46292682" target="_blank">62c</a>
+            </div>
+          </div>
+          
+          <div class="n-row">
+            <span class="n-score">68</span>
+            <div class="n-content">
+              <a class="n-title" href="https://github.com/composify-js/composify" target="_blank" rel="noopener">Show HN: Composify – Open-Source Visual Editor / Server-Driven UI for React</a>
+              <span class="n-domain"> (github.com)</span>
+            </div>
+            <div class="n-meta">
+              <span class="n-time">2d</span>
+              <a class="n-hn" href="https://news.ycombinator.com/item?id=46314385" target="_blank">5c</a>
+            </div>
+          </div>
+          
+          <div class="n-row">
+            <span class="n-score">54</span>
+            <div class="n-content">
+              <a class="n-title" href="https://news.ycombinator.com/item?id=46207017" target="_blank" rel="noopener">Launch HN: Mentat (YC F24) – Controlling LLMs with Runtime Intervention</a>
+              
+            </div>
+            <div class="n-meta">
+              <span class="n-time">1w</span>
+              <a class="n-hn" href="https://news.ycombinator.com/item?id=46207017" target="_blank">34c</a>
+            </div>
+          </div>
+          
+          <div class="n-row">
+            <span class="n-score">32</span>
+            <div class="n-content">
+              <a class="n-title" href="https://www.wsj.com/tech/ai/math-ken-ono-carina-hong-axiom-startup-649bc417" target="_blank" rel="noopener">The Math Legend Who Just Left Academia–For an AI Startup Run by a 24-Year-Old</a>
+              <span class="n-domain"> (wsj.com)</span>
+            </div>
+            <div class="n-meta">
+              <span class="n-time">2w</span>
+              <a class="n-hn" href="https://news.ycombinator.com/item?id=46148686" target="_blank">41c</a>
             </div>
           </div>
           
         
-      </section>
+      </div>
       
     
   </div>
-  
 </div>
 
 <footer>
-  <p>📊 Data: FRED · OECD · World Bank · ECB · HN |
-     <a href="https://github.com/xiaolong-y/bloomberg-lite">GitHub</a></p>
+  <div class="footer-links">
+    Data: IMF · ECB · World Bank · Yahoo · CoinGecko · HN |
+    <a href="CODEBOOK.html">codebook</a> |
+    <a href="https://github.com/xiaolong-y/meridian">src</a>
+  </div>
+  <div class="ascii-footer">
+    <span class="particle p1">·</span> <span class="particle p2">˚</span> <span class="particle p3">·</span> <span class="particle p4">˚</span> <span class="particle p5">·</span> <span class="particle p6">˚</span><br>
+    <span class="meridian-text">M E R I D I A N</span><br>
+    <span class="particle p6">˚</span> <span class="particle p5">·</span> <span class="particle p4">˚</span> <span class="particle p3">·</span> <span class="particle p2">˚</span> <span class="particle p1">·</span>
+  </div>
 </footer>
 
 </body>

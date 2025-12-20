@@ -13,7 +13,7 @@ import yaml
 from jinja2 import Environment, FileSystemLoader
 
 from ..storage.database import get_all_metric_meta, get_stories_by_feed, get_latest_observations
-from ..transforms.calculations import prepare_sparkline_data, generate_ascii_sparkline
+from ..transforms.calculations import prepare_sparkline_data, generate_ascii_sparkline, generate_braille_sparkline
 
 # Symbol mappings for enhanced visual display
 SECTION_ICONS = {
@@ -234,10 +234,10 @@ def build_dashboard_context() -> dict[str, Any]:
             meta = meta_lookup.get(metric_id)
 
             if meta:
-                # Generate sparkline from recent observations
-                observations = get_latest_observations(metric_id, limit=12)
-                sparkline_values = prepare_sparkline_data(observations, points=10)
-                sparkline = generate_ascii_sparkline(sparkline_values)
+                # Generate sparkline from recent observations using braille patterns
+                observations = get_latest_observations(metric_id, limit=20)
+                sparkline_values = prepare_sparkline_data(observations, points=16)
+                sparkline = generate_braille_sparkline(sparkline_values, width=8)
 
                 # Determine change direction for styling
                 change_class = ""
@@ -288,7 +288,7 @@ def build_dashboard_context() -> dict[str, Any]:
         })
 
     return {
-        "title": "Bloomberg-Lite",
+        "title": "Meridian",
         "generated_at": datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"),
         "metric_groups": metric_groups,
         "feeds": feeds,

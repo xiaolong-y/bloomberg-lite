@@ -1,5 +1,5 @@
 """
-SQLite database operations for Bloomberg-Lite.
+SQLite database operations for Meridian.
 
 Design principles:
 - Append-only for observations (full history)
@@ -14,7 +14,7 @@ from typing import Generator
 
 from .models import Observation, Story, MetricMeta
 
-DB_PATH = Path(__file__).parent.parent.parent / "data" / "bloomberg_lite.db"
+DB_PATH = Path(__file__).parent.parent.parent / "data" / "meridian.db"
 
 SCHEMA = """
 -- Macro observations (append-only, keeps full history)
@@ -34,7 +34,7 @@ CREATE INDEX IF NOT EXISTS idx_obs_date ON observations(obs_date DESC);
 
 -- Tech stories (rolling 7-day window)
 CREATE TABLE IF NOT EXISTS stories (
-    id INTEGER PRIMARY KEY,  -- HN item ID
+    id INTEGER NOT NULL,  -- HN item ID
     title TEXT NOT NULL,
     url TEXT,
     score INTEGER DEFAULT 0,
@@ -43,7 +43,8 @@ CREATE TABLE IF NOT EXISTS stories (
     posted_at TEXT,
     source TEXT NOT NULL,
     feed_id TEXT NOT NULL,
-    retrieved_at TEXT DEFAULT (datetime('now'))
+    retrieved_at TEXT DEFAULT (datetime('now')),
+    PRIMARY KEY (id, feed_id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_stories_feed ON stories(feed_id);
@@ -104,7 +105,7 @@ def upsert_story(story: Story) -> None:
         conn.execute("""
             INSERT INTO stories (id, title, url, score, comments, author, posted_at, source, feed_id)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ON CONFLICT(id) DO UPDATE SET
+            ON CONFLICT(id, feed_id) DO UPDATE SET
                 score = excluded.score,
                 comments = excluded.comments,
                 retrieved_at = datetime('now')

@@ -95,13 +95,13 @@ metrics:
     decimals: 1
 
   - id: eu.real_rate
-    name: "Germany Real Rate"
-    source: worldbank
-    indicator: FR.INR.RINR
-    country: DEU
-    frequency: annual
+    name: "EU Policy Rate"
+    source: ecb
+    dataflow: FM
+    series_key: B.U2.EUR.4F.KR.DFR.LEV
+    frequency: daily
     unit: "%"
-    decimals: 1
+    decimals: 2
 
   # ============================================
   # CHINA

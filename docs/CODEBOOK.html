@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meridian Codebook</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;400;500&display=swap');
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #FFFCF0;
+      --card: #F2F0E5;
+      --text: #2D2B28;
+      --dim: #6F6E69;
+      --muted: #DAD8CE;
+      --accent: #205EA6;
+      --link: #24837B;
+      --code: #5E409D;
+    }
+
+    html { font-size: 11px; }
+
+    body {
+      font-family: 'IBM Plex Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 16px;
+      max-width: 1000px;
+      margin: 0 auto;
+      font-weight: 400;
+    }
+
+    header {
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--muted);
+    }
+
+    h1 {
+      font-size: 14px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      color: var(--dim);
+      font-size: 10px;
+    }
+
+    h2 {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 24px 0 12px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--muted);
+    }
+
+    h2::before {
+      content: '>';
+      color: var(--muted);
+      margin-right: 6px;
+    }
+
+    p {
+      margin: 8px 0;
+      font-size: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 8px 0 16px;
+      font-size: 9px;
+      background: var(--card);
+      border: 1px solid var(--muted);
+      border-radius: 2px;
+    }
+
+    th {
+      text-align: left;
+      padding: 6px 8px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--muted);
+      color: var(--accent);
+      font-weight: 500;
+      font-size: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    td {
+      padding: 4px 8px;
+      border-bottom: 1px dotted var(--muted);
+      vertical-align: top;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: rgba(45, 43, 40, 0.02);
+    }
+
+    td strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    code {
+      font-family: 'IBM Plex Mono', monospace;
+      background: var(--bg);
+      color: var(--code);
+      padding: 1px 4px;
+      border-radius: 2px;
+      font-size: 9px;
+    }
+
+    pre {
+      background: var(--card);
+      border: 1px solid var(--muted);
+      border-radius: 2px;
+      padding: 12px;
+      overflow-x: auto;
+      font-size: 9px;
+      margin: 8px 0;
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+    }
+
+    ol {
+      margin: 8px 0 8px 20px;
+      font-size: 10px;
+    }
+
+    li {
+      margin: 4px 0;
+    }
+
+    a {
+      color: var(--link);
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 16px;
+      font-size: 9px;
+      color: var(--dim);
+    }
+
+    .back-link:hover {
+      color: var(--accent);
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid var(--muted);
+      margin: 16px 0;
+    }
+
+    footer {
+      margin-top: 32px;
+      padding-top: 12px;
+      border-top: 1px solid var(--muted);
+      text-align: center;
+      color: var(--dim);
+      font-size: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<a href="index.html" class="back-link">&larr; Back to Dashboard</a>
+
+<header>
+  <h1>Meridian Codebook</h1>
+  <p class="subtitle">Precise definitions and sources for all dashboard statistics</p>
+</header>
+
+<h2>Data Sources</h2>
+
+<table>
+  <tr>
+    <th>Source</th>
+    <th>API</th>
+    <th>Auth</th>
+    <th>Frequency</th>
+  </tr>
+  <tr>
+    <td><strong>IMF DataMapper</strong></td>
+    <td><code>imf.org/external/datamapper/api</code></td>
+    <td>No</td>
+    <td>Annual</td>
+  </tr>
+  <tr>
+    <td><strong>ECB SDMX</strong></td>
+    <td><code>data-api.ecb.europa.eu</code></td>
+    <td>No</td>
+    <td>Monthly/Daily</td>
+  </tr>
+  <tr>
+    <td><strong>World Bank</strong></td>
+    <td><code>api.worldbank.org/v2</code></td>
+    <td>No</td>
+    <td>Annual</td>
+  </tr>
+  <tr>
+    <td><strong>Japan e-Stat</strong></td>
+    <td><code>dashboard.e-stat.go.jp/api</code></td>
+    <td>No</td>
+    <td>Monthly/Quarterly</td>
+  </tr>
+  <tr>
+    <td><strong>Yahoo Finance</strong></td>
+    <td><code>query1.finance.yahoo.com</code></td>
+    <td>No</td>
+    <td>Daily</td>
+  </tr>
+  <tr>
+    <td><strong>CoinGecko</strong></td>
+    <td><code>api.coingecko.com/api/v3</code></td>
+    <td>No</td>
+    <td>Daily</td>
+  </tr>
+  <tr>
+    <td><strong>Hacker News</strong></td>
+    <td><code>hacker-news.firebaseio.com</code> + <code>hn.algolia.com</code></td>
+    <td>No</td>
+    <td>Real-time</td>
+  </tr>
+</table>
+
+<h2>US Economy</h2>
+
+<table>
+  <tr>
+    <th>Metric</th>
+    <th>Definition</th>
+    <th>Source</th>
+    <th>Code</th>
+  </tr>
+  <tr>
+    <td><strong>US GDP Growth</strong></td>
+    <td>Real GDP growth rate, annual percent change</td>
+    <td>IMF</td>
+    <td><code>NGDP_RPCH/USA</code></td>
+  </tr>
+  <tr>
+    <td><strong>US Inflation</strong></td>
+    <td>Consumer price inflation, annual average percent change</td>
+    <td>IMF</td>
+    <td><code>PCPIPCH/USA</code></td>
+  </tr>
+  <tr>
+    <td><strong>US Real Interest Rate</strong></td>
+    <td>Lending rate adjusted for inflation (nominal rate minus GDP deflator)</td>
+    <td>World Bank</td>
+    <td><code>FR.INR.RINR/USA</code></td>
+  </tr>
+  <tr>
+    <td><strong>US Unemployment</strong></td>
+    <td>Unemployment rate as percent of labor force</td>
+    <td>IMF</td>
+    <td><code>LUR/USA</code></td>
+  </tr>
+  <tr>
+    <td><strong>US Gov Debt/GDP</strong></td>
+    <td>General government gross debt as percent of GDP</td>
+    <td>IMF</td>
+    <td><code>GGXWDG_NGDP/USA</code></td>
+  </tr>
+  <tr>
+    <td><strong>US Current Account</strong></td>
+    <td>Current account balance as percent of GDP</td>
+    <td>IMF</td>
+    <td><code>BCA_NGDPD/USA</code></td>
+  </tr>
+</table>
+
+<h2>Eurozone</h2>
+
+<table>
+  <tr>
+    <th>Metric</th>
+    <th>Definition</th>
+    <th>Source</th>
+    <th>Code</th>
+  </tr>
+  <tr>
+    <td><strong>EU GDP Growth</strong></td>
+    <td>Euro area real GDP growth rate</td>
+    <td>IMF</td>
+    <td><code>NGDP_RPCH/EUQ</code></td>
+  </tr>
+  <tr>
+    <td><strong>EU HICP Inflation</strong></td>
+    <td>Harmonised Index of Consumer Prices, annual rate</td>
+    <td>ECB</td>
+    <td><code>ICP/M.U2.N.000000.4.ANR</code></td>
+  </tr>
+  <tr>
+    <td><strong>EU Policy Rate</strong></td>
+    <td>ECB Deposit Facility Rate (key policy rate)</td>
+    <td>ECB</td>
+    <td><code>FM/B.U2.EUR.4F.KR.DFR.LEV</code></td>
+  </tr>
+  <tr>
+    <td><strong>Germany Unemployment</strong></td>
+    <td>Unemployment rate, Germany (proxy for Eurozone)</td>
+    <td>IMF</td>
+    <td><code>LUR/DEU</code></td>
+  </tr>
+</table>
+
+<h2>China</h2>
+
+<table>
+  <tr>
+    <th>Metric</th>
+    <th>Definition</th>
+    <th>Source</th>
+    <th>Code</th>
+  </tr>
+  <tr>
+    <td><strong>China GDP Growth</strong></td>
+    <td>Real GDP growth rate</td>
+    <td>IMF</td>
+    <td><code>NGDP_RPCH/CHN</code></td>
+  </tr>
+  <tr>
+    <td><strong>China Inflation</strong></td>
+    <td>Consumer price inflation, annual average</td>
+    <td>IMF</td>
+    <td><code>PCPIPCH/CHN</code></td>
+  </tr>
+  <tr>
+    <td><strong>China Real Rate</strong></td>
+    <td>Real interest rate (lending rate minus inflation)</td>
+    <td>World Bank</td>
+    <td><code>FR.INR.RINR/CHN</code></td>
+  </tr>
+  <tr>
+    <td><strong>China Unemployment</strong></td>
+    <td>Surveyed urban unemployment rate</td>
+    <td>IMF</td>
+    <td><code>LUR/CHN</code></td>
+  </tr>
+  <tr>
+    <td><strong>China Current Account</strong></td>
+    <td>Current account balance as percent of GDP</td>
+    <td>IMF</td>
+    <td><code>BCA_NGDPD/CHN</code></td>
+  </tr>
+</table>
+
+<h2>Japan</h2>
+
+<table>
+  <tr>
+    <th>Metric</th>
+    <th>Definition</th>
+    <th>Source</th>
+    <th>Code</th>
+  </tr>
+  <tr>
+    <td><strong>Japan GDP QoQ</strong></td>
+    <td>Quarterly GDP growth rate, seasonally adjusted</td>
+    <td>e-Stat</td>
+    <td><code>0705020401000060000</code></td>
+  </tr>
+  <tr>
+    <td><strong>Japan Inflation</strong></td>
+    <td>Consumer price inflation, annual average</td>
+    <td>IMF</td>
+    <td><code>PCPIPCH/JPN</code></td>
+  </tr>
+  <tr>
+    <td><strong>Japan Real Rate</strong></td>
+    <td>Real interest rate</td>
+    <td>World Bank</td>
+    <td><code>FR.INR.RINR/JPN</code></td>
+  </tr>
+  <tr>
+    <td><strong>Japan Unemployment</strong></td>
+    <td>Seasonally adjusted unemployment rate</td>
+    <td>e-Stat</td>
+    <td><code>0301010000020020010</code></td>
+  </tr>
+  <tr>
+    <td><strong>Japan Industrial Prod</strong></td>
+    <td>Industrial Production Index</td>
+    <td>e-Stat</td>
+    <td><code>0502070301000090010</code></td>
+  </tr>
+</table>
+
+<h2>Global Markets</h2>
+
+<table>
+  <tr>
+    <th>Metric</th>
+    <th>Definition</th>
+    <th>Source</th>
+    <th>Ticker</th>
+  </tr>
+  <tr>
+    <td><strong>S&P 500</strong></td>
+    <td>S&P 500 Index, major US equity benchmark</td>
+    <td>Yahoo</td>
+    <td><code>^GSPC</code></td>
+  </tr>
+  <tr>
+    <td><strong>Brent Crude</strong></td>
+    <td>Brent crude oil futures price (USD per barrel)</td>
+    <td>Yahoo</td>
+    <td><code>BZ=F</code></td>
+  </tr>
+  <tr>
+    <td><strong>Gold</strong></td>
+    <td>Gold futures price (USD per troy ounce)</td>
+    <td>Yahoo</td>
+    <td><code>GC=F</code></td>
+  </tr>
+  <tr>
+    <td><strong>US Dollar Index</strong></td>
+    <td>Trade-weighted USD index (DXY)</td>
+    <td>Yahoo</td>
+    <td><code>DX-Y.NYB</code></td>
+  </tr>
+</table>
+
+<h2>Crypto</h2>
+
+<table>
+  <tr>
+    <th>Metric</th>
+    <th>Definition</th>
+    <th>Source</th>
+    <th>ID</th>
+  </tr>
+  <tr>
+    <td><strong>Bitcoin</strong></td>
+    <td>Bitcoin price in USD</td>
+    <td>CoinGecko</td>
+    <td><code>bitcoin</code></td>
+  </tr>
+  <tr>
+    <td><strong>Ethereum</strong></td>
+    <td>Ethereum price in USD</td>
+    <td>CoinGecko</td>
+    <td><code>ethereum</code></td>
+  </tr>
+</table>
+
+<h2>News Feeds</h2>
+
+<table>
+  <tr>
+    <th>Feed</th>
+    <th>Definition</th>
+    <th>Source</th>
+    <th>Query</th>
+  </tr>
+  <tr>
+    <td><strong>Tech</strong></td>
+    <td>Top 20 stories from HN homepage (algorithmic ranking)</td>
+    <td>HN Firebase</td>
+    <td><code>topstories</code></td>
+  </tr>
+  <tr>
+    <td><strong>AI/ML</strong></td>
+    <td>Top AI-related stories by popularity</td>
+    <td>HN Algolia</td>
+    <td><code>query="AI", min_score=50</code></td>
+  </tr>
+  <tr>
+    <td><strong>Startups</strong></td>
+    <td>Top startup-related stories by popularity</td>
+    <td>HN Algolia</td>
+    <td><code>query="startup", min_score=30</code></td>
+  </tr>
+</table>
+
+<h2>Notes</h2>
+
+<ol>
+  <li><strong>IMF DataMapper</strong> provides forecasts for current and future years; historical data goes back to 1980.</li>
+  <li><strong>World Bank Real Interest Rate</strong> is calculated as: lending rate minus inflation (GDP deflator). Data typically lags 2-3 years.</li>
+  <li><strong>ECB Policy Rate</strong> shows the Deposit Facility Rate, which is the rate banks receive for overnight deposits with the ECB. This is the key rate used to implement monetary policy since 2022.</li>
+  <li><strong>Japan e-Stat</strong> data is sourced from official Japanese government statistics (Statistics Bureau, Cabinet Office, METI).</li>
+  <li><strong>Sparklines</strong> display the last 16 data points using Unicode braille patterns for 2x resolution.</li>
+  <li><strong>Change values</strong> show period-over-period change where available (e.g., YoY for annual data, MoM for monthly).</li>
+</ol>
+
+<h2>API Endpoints</h2>
+
+<pre><code>IMF:        https://www.imf.org/external/datamapper/api/v1/{indicator}/{country}
+ECB:        https://data-api.ecb.europa.eu/service/data/{dataflow}/{series_key}
+World Bank: https://api.worldbank.org/v2/country/{country}/indicator/{indicator}
+e-Stat:     https://dashboard.e-stat.go.jp/api/1.0/Json/getData?IndicatorCode={code}
+Yahoo:      https://query1.finance.yahoo.com/v8/finance/chart/{ticker}
+CoinGecko:  https://api.coingecko.com/api/v3/coins/{id}/market_chart
+HN:         https://hacker-news.firebaseio.com/v0/topstories.json
+Algolia:    https://hn.algolia.com/api/v1/search?query={query}</code></pre>
+
+<footer>
+  <a href="index.html">&larr; Meridian Dashboard</a>
+</footer>
+
+</body>
+</html>
