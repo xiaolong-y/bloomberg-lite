@@ -6,12 +6,13 @@ Handles:
 - Model benchmark tracking
 
 API Notes:
-- Uses HuggingFace Hub API to fetch dataset files
+- Uses HuggingFace Datasets Server API for structured data access
 - No authentication required for public datasets
-- Leaderboard data: open-llm-leaderboard/results
+- Leaderboard data: open-llm-leaderboard/contents
 """
+import re
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 
 import requests
 
@@ -25,53 +26,77 @@ class HuggingFaceConnector(BaseMetricConnector):
     SOURCE_NAME = "huggingface"
     BASE_URL = "https://huggingface.co"
 
-    # Leaderboard API endpoint
-    LEADERBOARD_API = "https://huggingface.co/api/spaces/open-llm-leaderboard/open_llm_leaderboard"
+    # Datasets Server API - provides structured access to HuggingFace datasets
+    DATASETS_SERVER = "https://datasets-server.huggingface.co"
+
+    # Sample offsets to scan the leaderboard (dataset is sorted alphabetically)
+    SAMPLE_OFFSETS = [0, 1000, 2000, 3000, 4000]
+    BATCH_SIZE = 100
 
     def fetch(self, config: ConnectorConfig) -> FetchResult:
         """
-        Fetch LLM leaderboard data from HuggingFace.
+        Fetch LLM leaderboard data from HuggingFace Datasets Server.
+
+        Samples from multiple offsets in the dataset to find the top-scoring
+        models since the dataset is sorted alphabetically, not by score.
 
         Args:
             config: Configuration for the metric
 
         Returns:
-            FetchResult with leaderboard data
+            FetchResult with leaderboard data including top model and score
         """
+        all_models = []
+
         try:
-            # Try the Gradio API endpoint for the leaderboard
-            # The Open LLM Leaderboard is a Gradio space
-            api_url = f"{self.BASE_URL}/api/datasets/open-llm-leaderboard/results/parquet/default/train/0.parquet"
+            # Fetch from multiple offsets to sample the full dataset
+            for offset in self.SAMPLE_OFFSETS:
+                url = (
+                    f"{self.DATASETS_SERVER}/rows"
+                    f"?dataset=open-llm-leaderboard/contents"
+                    f"&config=default&split=train"
+                    f"&offset={offset}&length={self.BATCH_SIZE}"
+                )
 
-            # First try to get the dataset info
-            info_url = f"{self.BASE_URL}/api/datasets/open-llm-leaderboard/results"
+                response = requests.get(url, timeout=30)
 
-            response = requests.get(info_url, timeout=30)
+                if response.status_code == 200:
+                    data = response.json()
+                    for row_data in data.get("rows", []):
+                        row = row_data.get("row", {})
+                        model_html = row.get("Model", "")
 
-            if response.status_code == 200:
-                data = response.json()
+                        # Extract model name from HTML anchor tag
+                        match = re.search(r">([^<]+)</a>", model_html)
+                        name = match.group(1) if match else model_html
+
+                        avg_score = row.get("Average ⬆️", 0)
+                        if avg_score and name:
+                            all_models.append({
+                                "name": name,
+                                "score": float(avg_score)
+                            })
+
+            if all_models:
+                # Sort by score descending
+                all_models.sort(key=lambda x: x["score"], reverse=True)
+
                 return FetchResult(
                     success=True,
-                    data=data,
+                    data={
+                        "top_models": all_models[:10],
+                        "top_score": all_models[0]["score"],
+                        "top_model": all_models[0]["name"],
+                        "sample_size": len(all_models)
+                    },
                     source=self.SOURCE_NAME
                 )
 
-            # Fallback: try to scrape the leaderboard space
-            space_url = f"{self.BASE_URL}/spaces/open-llm-leaderboard/open_llm_leaderboard"
-            response = requests.get(space_url, timeout=30)
-
-            if response.status_code == 200:
-                # Return empty data - we'll use a fallback value
-                return FetchResult(
-                    success=True,
-                    data={"fallback": True, "top_score": 85.0},  # Approximate current top score
-                    source=self.SOURCE_NAME
-                )
-
+            # No data found
             return FetchResult(
                 success=False,
                 data=[],
-                error=f"HuggingFace API returned status {response.status_code}",
+                error="No leaderboard data found in HuggingFace dataset",
                 source=self.SOURCE_NAME
             )
 
@@ -91,14 +116,16 @@ class HuggingFaceConnector(BaseMetricConnector):
 
         For LLM benchmarks, we track:
         - Top model score (average across benchmarks)
-        - Number of models submitted
+
+        Returns a single observation with the top score from the leaderboard.
         """
         observations = []
         today = datetime.now().strftime("%Y-%m-%d")
 
-        # Handle fallback case
-        if isinstance(raw_data, dict) and raw_data.get("fallback"):
-            top_score = raw_data.get("top_score", 0)
+        if isinstance(raw_data, dict) and "top_score" in raw_data:
+            top_score = raw_data["top_score"]
+            top_model = raw_data.get("top_model", "unknown")
+
             obs = Observation(
                 metric_id=config.metric_id,
                 obs_date=today,
@@ -108,37 +135,19 @@ class HuggingFaceConnector(BaseMetricConnector):
                 retrieved_at=datetime.now()
             )
             observations.append(obs)
-            return observations
-
-        # Try to extract data from the API response
-        try:
-            # If we have dataset info, try to get the latest data
-            if isinstance(raw_data, dict):
-                # The dataset might have different structures
-                # For now, return a placeholder observation
-                obs = Observation(
-                    metric_id=config.metric_id,
-                    obs_date=today,
-                    value=85.0,  # Approximate current top score
-                    unit=config.unit,
-                    source=self.SOURCE_NAME,
-                    retrieved_at=datetime.now()
-                )
-                observations.append(obs)
-
-        except Exception:
-            pass
 
         return observations
 
     def health_check(self) -> bool:
-        """Check HuggingFace API availability."""
+        """Check HuggingFace Datasets Server availability."""
         try:
-            response = requests.get(
-                f"{self.BASE_URL}/api/datasets",
-                params={"limit": 1},
-                timeout=10
+            # Test the datasets-server API with a minimal request
+            url = (
+                f"{self.DATASETS_SERVER}/rows"
+                f"?dataset=open-llm-leaderboard/contents"
+                f"&config=default&split=train&offset=0&length=1"
             )
+            response = requests.get(url, timeout=10)
             return response.status_code == 200
         except requests.RequestException:
             return False
