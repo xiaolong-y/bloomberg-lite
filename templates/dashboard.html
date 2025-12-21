@@ -156,7 +156,7 @@
     .m-chg {
       font-size: 8px;
       flex-shrink: 0;
-      min-width: 36px;
+      min-width: 56px;
       text-align: right;
       font-variant-numeric: tabular-nums;
     }
@@ -332,7 +332,7 @@
           <span class="m-name">{{ m.name }}</span>
           {% if m.sparkline %}<span class="m-spark">{{ m.sparkline }}</span>{% endif %}
           <span class="m-val">{{ m.formatted_value }}</span>
-          <span class="m-chg {{ m.change_class }}">{{ m.formatted_change }}</span>
+          <span class="m-chg {{ m.change_class }}">{{ m.formatted_change }}{% if m.change_period %} {{ m.change_period }}{% endif %}</span>
         </div>
         {% endfor %}
       {% else %}
@@ -424,7 +424,7 @@
 
 <footer>
   <div class="footer-links">
-    Data: IMF · ECB · World Bank · Yahoo · CoinGecko · HN |
+    Data: FRED · IMF · ECB · DBnomics · HuggingFace · Vast.ai · Yahoo · CoinGecko · HN |
     <a href="CODEBOOK.html">codebook</a> |
     <a href="https://github.com/xiaolong-y/meridian">src</a>
   </div>

@@ -282,6 +282,27 @@
     <td>Real-time</td>
     <td>News Feed</td>
   </tr>
+  <tr>
+    <td><strong>DBnomics</strong></td>
+    <td><code>api.db.nomics.world/v22</code></td>
+    <td>No</td>
+    <td>Monthly</td>
+    <td>ISM PMI (Leading Indicator)</td>
+  </tr>
+  <tr>
+    <td><strong>HuggingFace</strong></td>
+    <td><code>huggingface.co/api</code></td>
+    <td>No</td>
+    <td>Daily</td>
+    <td>LLM Benchmarks</td>
+  </tr>
+  <tr>
+    <td><strong>Vast.ai</strong></td>
+    <td><code>console.vast.ai/api/v0</code></td>
+    <td>Optional</td>
+    <td>Real-time</td>
+    <td>GPU Spot Pricing</td>
+  </tr>
 </table>
 
 <h2>US Economy (FRED) <span class="tag primary">Actual Data</span></h2>
@@ -337,6 +358,97 @@
     <td>FRED</td>
     <td><code>GFDEGDQ188S</code></td>
     <td>Quarterly</td>
+  </tr>
+</table>
+
+<h2>Risk & Volatility</h2>
+
+<p>Market risk indicators and forward-looking metrics. These are critical for understanding market sentiment and financial conditions.</p>
+
+<table>
+  <tr>
+    <th>Metric</th>
+    <th>Definition</th>
+    <th>How to Interpret</th>
+    <th>Source</th>
+    <th>Code</th>
+  </tr>
+  <tr>
+    <td><strong>VIX</strong></td>
+    <td>CBOE Volatility Index - measures 30-day expected S&P 500 volatility</td>
+    <td><strong>&lt;15</strong>: Low fear (complacent)<br><strong>15-20</strong>: Normal<br><strong>20-30</strong>: Elevated fear<br><strong>&gt;30</strong>: High stress</td>
+    <td>FRED</td>
+    <td><code>VIXCLS</code></td>
+  </tr>
+  <tr>
+    <td><strong>HY Credit Spread</strong></td>
+    <td>ICE BofA High Yield Option-Adjusted Spread - spread over Treasuries for junk bonds</td>
+    <td><strong>&lt;300bp</strong>: Risk-on (tight)<br><strong>300-500bp</strong>: Normal<br><strong>500-800bp</strong>: Stressed<br><strong>&gt;800bp</strong>: Crisis</td>
+    <td>FRED</td>
+    <td><code>BAMLH0A0HYM2</code></td>
+  </tr>
+  <tr>
+    <td><strong>2Y Treasury</strong></td>
+    <td>2-Year Treasury Constant Maturity Rate</td>
+    <td>Reflects Fed rate expectations over next 2 years. Rising = expected hikes, falling = expected cuts</td>
+    <td>FRED</td>
+    <td><code>DGS2</code></td>
+  </tr>
+  <tr>
+    <td><strong>5Y Breakeven</strong></td>
+    <td>5-Year Breakeven Inflation Rate (nominal minus real yield)</td>
+    <td>Market-implied 5-year inflation expectations. Target ~2%, &gt;3% concerning</td>
+    <td>FRED</td>
+    <td><code>T5YIE</code></td>
+  </tr>
+  <tr>
+    <td><strong>10Y Breakeven</strong></td>
+    <td>10-Year Breakeven Inflation Rate</td>
+    <td>Long-term inflation expectations. More stable than 5Y, anchored near 2%</td>
+    <td>FRED</td>
+    <td><code>T10YIE</code></td>
+  </tr>
+  <tr>
+    <td><strong>ISM Manufacturing PMI</strong></td>
+    <td>ISM Purchasing Managers' Index for Manufacturing</td>
+    <td><strong>&gt;50</strong>: Expansion<br><strong>&lt;50</strong>: Contraction<br>Leading indicator - signals economic direction 6-9 months ahead</td>
+    <td>DBnomics</td>
+    <td><code>ISM/pmi/pm</code></td>
+  </tr>
+</table>
+
+<h2>AI & Compute</h2>
+
+<p>AI industry metrics including model benchmark performance and compute infrastructure costs.</p>
+
+<table>
+  <tr>
+    <th>Metric</th>
+    <th>Definition</th>
+    <th>How to Interpret</th>
+    <th>Source</th>
+    <th>Code</th>
+  </tr>
+  <tr>
+    <td><strong>Top LLM Score</strong></td>
+    <td>Average benchmark score of the top-ranked open model on HuggingFace Open LLM Leaderboard</td>
+    <td>Tracks frontier capability of open-source LLMs. Higher = more capable models</td>
+    <td>HuggingFace</td>
+    <td><code>open-llm-leaderboard</code></td>
+  </tr>
+  <tr>
+    <td><strong>H100 80GB Spot</strong></td>
+    <td>Median spot price for NVIDIA H100 80GB GPUs on Vast.ai</td>
+    <td>Proxy for AI compute scarcity. <strong>Higher prices</strong> = more demand / less supply</td>
+    <td>Vast.ai</td>
+    <td><code>H100_80GB</code></td>
+  </tr>
+  <tr>
+    <td><strong>A100 80GB Spot</strong></td>
+    <td>Median spot price for NVIDIA A100 80GB GPUs on Vast.ai</td>
+    <td>Previous-gen flagship. Cheaper than H100 but still production-capable</td>
+    <td>Vast.ai</td>
+    <td><code>A100_80GB</code></td>
   </tr>
 </table>
 
@@ -609,7 +721,10 @@ e-Stat:     https://dashboard.e-stat.go.jp/api/1.0/Json/getData?IndicatorCode={c
 Yahoo:      https://query1.finance.yahoo.com/v8/finance/chart/{ticker}
 CoinGecko:  https://api.coingecko.com/api/v3/coins/{id}/market_chart
 HN:         https://hacker-news.firebaseio.com/v0/topstories.json
-Algolia:    https://hn.algolia.com/api/v1/search?query={query}</code></pre>
+Algolia:    https://hn.algolia.com/api/v1/search?query={query}
+DBnomics:   https://api.db.nomics.world/v22/series/{provider}/{dataset}/{series}
+HuggingFace: https://huggingface.co/api/datasets/{dataset}
+Vast.ai:    https://console.vast.ai/api/v0/bundles/</code></pre>
 
 <h2>FRED API Setup</h2>
 

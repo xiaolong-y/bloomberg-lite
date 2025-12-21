@@ -71,6 +71,100 @@ metrics:
     decimals: 1
 
   # ============================================
+  # RISK & VOLATILITY (FRED)
+  # ============================================
+  - id: risk.vix
+    name: "VIX"
+    source: fred
+    series_id: VIXCLS              # CBOE Volatility Index
+    frequency: daily
+    unit: "index"
+    decimals: 1
+    # Above 20 = elevated fear, above 30 = high stress
+
+  - id: risk.hy_spread
+    name: "HY Credit Spread"
+    source: fred
+    series_id: BAMLH0A0HYM2        # ICE BofA High Yield OAS
+    frequency: daily
+    unit: "bp"
+    decimals: 0
+    multiplier: 100                 # Convert % to basis points
+    # Widens in risk-off, tightens in risk-on
+
+  - id: us.yield_2y
+    name: "2Y Treasury"
+    source: fred
+    series_id: DGS2                # 2-Year Treasury Constant Maturity
+    frequency: daily
+    unit: "%"
+    decimals: 2
+    # Reflects Fed rate expectations over next 2 years
+
+  - id: us.breakeven_5y
+    name: "5Y Breakeven"
+    source: fred
+    series_id: T5YIE               # 5-Year Breakeven Inflation Rate
+    frequency: daily
+    unit: "%"
+    decimals: 2
+    # Market-implied 5-year inflation expectations
+
+  - id: us.breakeven_10y
+    name: "10Y Breakeven"
+    source: fred
+    series_id: T10YIE              # 10-Year Breakeven Inflation Rate
+    frequency: daily
+    unit: "%"
+    decimals: 2
+    # Market-implied 10-year inflation expectations
+
+  # ============================================
+  # LEADING INDICATORS
+  # ============================================
+  - id: us.pmi
+    name: "ISM Manufacturing PMI"
+    source: dbnomics
+    series_id: ISM/pmi/pm          # ISM Manufacturing PMI via DBnomics
+    frequency: monthly
+    unit: "index"
+    decimals: 1
+    # Above 50 = expansion, below 50 = contraction
+
+  # ============================================
+  # AI BENCHMARKS (HuggingFace)
+  # ============================================
+  - id: ai.top_model_score
+    name: "Top LLM Score"
+    source: huggingface
+    series_id: open-llm-leaderboard
+    frequency: daily
+    unit: "pts"
+    decimals: 1
+    # Average benchmark score of top-ranked open model
+
+  # ============================================
+  # GPU COMPUTE PRICING (Vast.ai)
+  # ============================================
+  - id: compute.h100_spot
+    name: "H100 80GB Spot"
+    source: vastai
+    series_id: H100_80GB
+    frequency: daily
+    unit: "$/hr"
+    decimals: 2
+    # Median spot price on Vast.ai - proxy for AI compute scarcity
+
+  - id: compute.a100_spot
+    name: "A100 80GB Spot"
+    source: vastai
+    series_id: A100_80GB
+    frequency: daily
+    unit: "$/hr"
+    decimals: 2
+    # Median A100 spot price
+
+  # ============================================
   # UNITED STATES - IMF PROJECTIONS (2030)
   # ============================================
   - id: us.gdp_growth_proj
@@ -309,6 +403,9 @@ groups:
   - name: "US Economy (FRED)"
     metrics: [us.gdp_growth, us.inflation, us.unemployment, us.real_rate_1y, us.real_rate_10y, us.fed_funds, us.gov_debt]
 
+  - name: "Risk & Volatility"
+    metrics: [risk.vix, risk.hy_spread, us.yield_2y, us.breakeven_5y, us.breakeven_10y, us.pmi]
+
   - name: "US Outlook (IMF 2030)"
     metrics: [us.gdp_growth_proj, us.inflation_proj, us.unemployment_proj, us.gov_debt_proj, us.current_account_proj]
 
@@ -326,3 +423,6 @@ groups:
 
   - name: "Crypto"
     metrics: [crypto.bitcoin, crypto.ethereum]
+
+  - name: "AI & Compute"
+    metrics: [ai.top_model_score, compute.h100_spot, compute.a100_spot]

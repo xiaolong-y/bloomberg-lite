@@ -14,6 +14,9 @@ from .estat_dashboard import EStatDashboardConnector
 from .coingecko import CoinGeckoConnector
 from .yahoo import YahooFinanceConnector
 from .oecd import OECDConnector
+from .dbnomics import DBnomicsConnector
+from .huggingface import HuggingFaceConnector
+from .vastai import VastAIConnector
 from .hackernews import HNFirebaseConnector, HNAlgoliaConnector
 
 __all__ = [
@@ -30,6 +33,9 @@ __all__ = [
     "CoinGeckoConnector",
     "YahooFinanceConnector",
     "OECDConnector",
+    "DBnomicsConnector",
+    "HuggingFaceConnector",
+    "VastAIConnector",
     "HNFirebaseConnector",
     "HNAlgoliaConnector",
 ]

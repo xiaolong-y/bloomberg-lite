@@ -210,6 +210,33 @@ def format_change(change: Optional[float], unit: Optional[str]) -> str:
         return f"{prefix}{change:.2f}"
 
 
+def get_change_period(metric_config: dict) -> str:
+    """
+    Determine the change period label for a metric.
+
+    Uses explicit change_period if set, otherwise derives from frequency.
+
+    Args:
+        metric_config: Metric configuration dict from YAML
+
+    Returns:
+        Period label: DoD, MoM, QoQ, or YoY
+    """
+    # Use explicit change_period if specified
+    if metric_config.get("change_period"):
+        return metric_config["change_period"]
+
+    # Derive from frequency
+    frequency = metric_config.get("frequency", "monthly")
+    period_map = {
+        "daily": "DoD",
+        "monthly": "MoM",
+        "quarterly": "QoQ",
+        "annual": "YoY",
+    }
+    return period_map.get(frequency, "")
+
+
 def build_dashboard_context() -> dict[str, Any]:
     """
     Build template context from database.
@@ -225,6 +252,9 @@ def build_dashboard_context() -> dict[str, Any]:
     # Get all metric metadata from database
     all_meta = get_all_metric_meta()
     meta_lookup = {m["id"]: m for m in all_meta}
+
+    # Build lookup for metric configs by ID
+    metric_config_lookup = {m["id"]: m for m in config["metrics"].get("metrics", [])}
 
     # Build metric groups with sparklines
     metric_groups = []
@@ -247,10 +277,15 @@ def build_dashboard_context() -> dict[str, Any]:
                     elif meta["change"] < 0:
                         change_class = "down"
 
+                # Get change period label from config
+                metric_cfg = metric_config_lookup.get(metric_id, {})
+                change_period = get_change_period(metric_cfg)
+
                 group_metrics.append({
                     **meta,
                     "sparkline": sparkline,
                     "change_class": change_class,
+                    "change_period": change_period,
                     "direction_arrow": get_directional_arrow(meta.get("change")),
                     "formatted_value": format_value(meta.get("last_value"), meta.get("unit")),
                     "formatted_change": format_change(meta.get("change"), meta.get("unit")),

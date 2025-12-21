@@ -28,6 +28,9 @@ from .connectors import (
     CoinGeckoConnector,
     YahooFinanceConnector,
     OECDConnector,
+    DBnomicsConnector,
+    HuggingFaceConnector,
+    VastAIConnector,
     HNFirebaseConnector,
     HNAlgoliaConnector,
     ConnectorConfig,
@@ -106,6 +109,12 @@ def fetch_metrics(metrics_config: dict) -> None:
                     connectors[source] = YahooFinanceConnector()
                 elif source == "oecd":
                     connectors[source] = OECDConnector()
+                elif source == "dbnomics":
+                    connectors[source] = DBnomicsConnector()
+                elif source == "huggingface":
+                    connectors[source] = HuggingFaceConnector()
+                elif source == "vastai":
+                    connectors[source] = VastAIConnector()
                 else:
                     return None
             except ValueError as e:
